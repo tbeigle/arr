@@ -1,0 +1,49 @@
+@import "mixins";
+
+#popups {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5000;
+  display: none;
+  width: 100%;
+  padding: 0 20px;
+  @include bg-popups;
+  
+  .block {
+    position: relative;
+    display: none;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 20px;
+    background: $col-lightest;
+    
+    margin: {
+      right: auto;
+      left: auto;
+    }
+    
+    @include shadow-popup;
+  }
+  
+  .close-popup {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    display: block;
+    width: 35px;
+    height: 35px;
+    background: $col-darkest;
+    border: 2px solid $col-top-bor-b;
+    @include b-radius(50%);
+    
+    &:hover,
+    &:active {
+      background: $col-top-bor-b;
+      
+      border: {
+        color: $col-darkest;
+      }
+    }
+  }
+}

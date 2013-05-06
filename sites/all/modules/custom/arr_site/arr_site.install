@@ -1,0 +1,215 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the ARR site module.
+ */
+
+/**
+ * Implementation of hook_install
+ */
+function arr_site_install() {
+  drupal_set_message('The arr_site module was successfully installed');
+}
+
+/**
+ * Implementation of hook_uninstall
+ */
+function arr_site_uninstall() {
+  variable_del('arr_site_vendor_vocabulary');
+  variable_del('arr_site_vendor_node_type');
+  drupal_set_message('The arr_site module was successfully uninstalled');
+}
+
+/**
+ * Implementation of hook_schema
+ */
+function arr_site_schema() {
+  $schema['arr_spec_categories'] = array(
+    'description' => 'The base table for technical specification categories.',
+    'fields' => array(
+      'spec_cat_id' => array(
+        'description' => 'The primary identifier for a technical specification category.', 
+        'type' => 'serial', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE,
+      ),
+      'tid' => array(
+        'description' => 'The taxonomy term identifier.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'spec_category' => array(
+        'description' => 'The name of this technical specification category.', 
+        'type' => 'varchar', 
+        'length' => 255, 
+        'not null' => TRUE, 
+        'default' => '',
+      ),
+      'weight' => array(
+        'description' => 'The sorting weight for this category.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array(
+      'spec_cat_id',
+    ),
+  );
+  
+  $schema['arr_spec_cat_vendor_rating'] = array(
+    'description' => 'This table contains per-category ratings for vendors.',
+    'fields' => array(
+      'spec_cat_id' => array(
+        'description' => 'The tech spec category identifier.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The vendor node identifier.', 
+        'type' => 'int', 
+        'not null' => TRUE, 
+        'default' => 0,
+      ),
+      'rating' => array(
+        'description' => 'The rating for the vendor in this category',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'unique keys' => array(
+      'nid_scid' => array('nid', 'spec_cat_id'),
+    ),
+  );
+  
+  $schema['arr_specs'] = array(
+    'description' => 'The base table for vendor technical specifications.', 
+    'fields' => array(
+      'spec_id' => array(
+        'description' => 'The primary identifier for a technical specification.', 
+        'type' => 'serial', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE,
+      ),
+      'spec_cat_id' => array(
+        'description' => 'The tech spec category identifier.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'spec' => array(
+        'description' => 'The title of this technical specification.', 
+        'type' => 'varchar', 
+        'length' => 255, 
+        'not null' => TRUE, 
+        'default' => '',
+      ),
+      'weight' => array(
+        'description' => 'The sorting weight for this tech spec.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'points_yes' => array(
+        'description' => 'The number of points to add/subtract if the value is yes.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'points_no' => array(
+        'description' => 'The number of points to add/subtract if the value is no.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array(
+      'spec_id',
+    ),
+  );
+  
+  $schema['arr_spec_vendors'] = array(
+    'description' => 'This table stores relationship data for tech specs and vendor nodes',
+    'fields' => array(
+      'v_spec_id' => array(
+        'description' => 'The primary identifier for a technical specification to vendor node relationship.', 
+        'type' => 'serial', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE,
+      ),
+      'spec_id' => array(
+        'description' => 'The tech spec identifier.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The vendor node identifier.', 
+        'type' => 'int', 
+        'not null' => TRUE, 
+        'default' => 0,
+      ),
+      'has_spec' => array(
+        'description' => '1 means the vendor has the spec while 0 means the vendor does not have the spec.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'spec_comment' => array(
+        'description' => 'The vendor-specific comment for this technical specification.',
+        'type' => 'text',
+      ),
+    ),
+    'primary key' => array(
+      'v_spec_id',
+    ),
+  );
+  
+  return $schema;
+}
+
+/**
+ * Update to add the weight column to the tech specs table
+ */
+function arr_site_update_7100() {
+  if (!db_field_exists('arr_specs', 'weight')) {
+    $spec = array(
+      'description' => 'The sorting weight for this tech spec.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    );
+    
+    db_add_field('arr_specs', 'weight', $spec);
+  }
+}
+
+/**
+ * Update to add the points_yes and points_no columns to the tech specs table
+ */
+function arr_site_update_7101() {
+  if (!db_field_exists('arr_specs', 'points_yes')) {
+    $spec = array(
+      'description' => 'The number of points to add/subtract if the value is yes.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 1,
+    );
+    
+    db_add_field('arr_specs', 'points_yes', $spec);
+  }
+  
+  if (!db_field_exists('arr_specs', 'points_no')) {
+    $spec = array(
+      'description' => 'The number of points to add/subtract if the value is no.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    );
+    
+    db_add_field('arr_specs', 'points_no', $spec);
+  }
+}

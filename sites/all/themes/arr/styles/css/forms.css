@@ -1,0 +1,388 @@
+/******************************************************************
+Site Name: All Rave Reviews
+Author: Tom Beigle
+
+Stylesheet: Mixins
+
+mixins.css should include all the relevent styles and graphical elements
+for a site, which would include things like icons, fonts, graphical treatments.
+Basically, anything that is related to the sites design, not structure. 
+******************************************************************/
+/*
+How to use color variables properly:
+http://sachagreif.com/sass-color-variables/
+*/
+/*********************
+Color Variables
+*********************/
+/*********************
+Font Variables
+*********************/
+/*********************
+Border Variables
+*********************/
+/*********************
+Width Variables
+*********************/
+/*********************
+Height Variables
+*********************/
+/*********************
+Clearfix
+*********************/
+/*********************
+Width Mixins
+*********************/
+/*********************
+Border Mixins
+*********************/
+/*********************
+Background Mixins
+*********************/
+/*********************
+Hiding stuff
+*********************/
+/*********************
+Font Mixins
+*********************/
+/*********************
+SHADOWS
+*********************/
+/*************************
+Encoded background images
+
+http://webcodertools.com/imagetobase64converter
+*************************/
+form {
+  max-width: 520px; }
+  form > div form > .form-item {
+    zoom: 1; }
+    form > div form > .form-item:before, form > div form > .form-item:after {
+      content: "";
+      display: table; }
+    form > div form > .form-item:after {
+      clear: both; }
+
+.form-text,
+.form-select,
+.form-textarea {
+  width: 100%;
+  max-width: 210px;
+  padding: 4px 5px 4px 5px; }
+
+.form-text,
+.form-submit,
+.form-textarea {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px; }
+
+.form-text,
+.form-textarea {
+  border: 1px solid #d9d9d9; }
+
+.form-checkbox {
+  margin-left: 0; }
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0; }
+
+/**
+ * Form actions
+ */
+.form-actions .form-submit {
+  display: inline-block;
+  height: 26px;
+  padding-top: 0;
+  padding-right: 12px;
+  padding-bottom: 0;
+  padding-left: 12px;
+  background: linear-gradient(bottom, #ff6000 0%, #ff9000 54%);
+  background: -webkit-linear-gradient(bottom, #ff6000 0%, #ff9000 54%);
+  background: -moz-linear-gradient(bottom, #ff6000 0%, #ff9000 54%);
+  border: none; }
+  .form-actions .form-submit:hover, .form-actions .form-submit:active, .form-actions .form-submit:focus {
+    background: #ff9000; }
+
+/**
+ * Webforms
+ */
+.webform-client-form {
+  max-width: 520px;
+  /**
+   * Form actions
+   */ }
+  .webform-client-form .webform-component {
+    zoom: 1; }
+    .webform-client-form .webform-component:before, .webform-client-form .webform-component:after {
+      content: "";
+      display: table; }
+    .webform-client-form .webform-component:after {
+      clear: both; }
+  .webform-client-form .webform-container-inline > label, .webform-client-form .webform-container-inline > div,
+  .webform-client-form .webform-container-inline input[type="text"],
+  .webform-client-form .webform-container-inline input[type="email"],
+  .webform-client-form .webform-container-inline select,
+  .webform-client-form .webform-container-inline .form-textarea-wrapper,
+  .webform-client-form .webform-component-select > label,
+  .webform-client-form .webform-component-select > div,
+  .webform-client-form .webform-component-select input[type="text"],
+  .webform-client-form .webform-component-select input[type="email"],
+  .webform-client-form .webform-component-select select,
+  .webform-client-form .webform-component-select .form-textarea-wrapper,
+  .webform-client-form .webform-component-textarea > label,
+  .webform-client-form .webform-component-textarea > div,
+  .webform-client-form .webform-component-textarea input[type="text"],
+  .webform-client-form .webform-component-textarea input[type="email"],
+  .webform-client-form .webform-component-textarea select,
+  .webform-client-form .webform-component-textarea .form-textarea-wrapper,
+  .webform-client-form .webform-component-radios > label,
+  .webform-client-form .webform-component-radios > div,
+  .webform-client-form .webform-component-radios input[type="text"],
+  .webform-client-form .webform-component-radios input[type="email"],
+  .webform-client-form .webform-component-radios select,
+  .webform-client-form .webform-component-radios .form-textarea-wrapper {
+    float: left;
+    width: 50%;
+    margin-right: 0;
+    margin-left: 0; }
+    .webform-client-form .webform-container-inline > label:first-child, .webform-client-form .webform-container-inline > div:first-child,
+    .webform-client-form .webform-container-inline input[type="text"]:first-child,
+    .webform-client-form .webform-container-inline input[type="email"]:first-child,
+    .webform-client-form .webform-container-inline select:first-child,
+    .webform-client-form .webform-container-inline .form-textarea-wrapper:first-child,
+    .webform-client-form .webform-component-select > label:first-child,
+    .webform-client-form .webform-component-select > div:first-child,
+    .webform-client-form .webform-component-select input[type="text"]:first-child,
+    .webform-client-form .webform-component-select input[type="email"]:first-child,
+    .webform-client-form .webform-component-select select:first-child,
+    .webform-client-form .webform-component-select .form-textarea-wrapper:first-child,
+    .webform-client-form .webform-component-textarea > label:first-child,
+    .webform-client-form .webform-component-textarea > div:first-child,
+    .webform-client-form .webform-component-textarea input[type="text"]:first-child,
+    .webform-client-form .webform-component-textarea input[type="email"]:first-child,
+    .webform-client-form .webform-component-textarea select:first-child,
+    .webform-client-form .webform-component-textarea .form-textarea-wrapper:first-child,
+    .webform-client-form .webform-component-radios > label:first-child,
+    .webform-client-form .webform-component-radios > div:first-child,
+    .webform-client-form .webform-component-radios input[type="text"]:first-child,
+    .webform-client-form .webform-component-radios input[type="email"]:first-child,
+    .webform-client-form .webform-component-radios select:first-child,
+    .webform-client-form .webform-component-radios .form-textarea-wrapper:first-child {
+      padding-right: 10px; }
+    .webform-client-form .webform-container-inline > label.description, .webform-client-form .webform-container-inline > div.description,
+    .webform-client-form .webform-container-inline input[type="text"].description,
+    .webform-client-form .webform-container-inline input[type="email"].description,
+    .webform-client-form .webform-container-inline select.description,
+    .webform-client-form .webform-container-inline .form-textarea-wrapper.description,
+    .webform-client-form .webform-component-select > label.description,
+    .webform-client-form .webform-component-select > div.description,
+    .webform-client-form .webform-component-select input[type="text"].description,
+    .webform-client-form .webform-component-select input[type="email"].description,
+    .webform-client-form .webform-component-select select.description,
+    .webform-client-form .webform-component-select .form-textarea-wrapper.description,
+    .webform-client-form .webform-component-textarea > label.description,
+    .webform-client-form .webform-component-textarea > div.description,
+    .webform-client-form .webform-component-textarea input[type="text"].description,
+    .webform-client-form .webform-component-textarea input[type="email"].description,
+    .webform-client-form .webform-component-textarea select.description,
+    .webform-client-form .webform-component-textarea .form-textarea-wrapper.description,
+    .webform-client-form .webform-component-radios > label.description,
+    .webform-client-form .webform-component-radios > div.description,
+    .webform-client-form .webform-component-radios input[type="text"].description,
+    .webform-client-form .webform-component-radios input[type="email"].description,
+    .webform-client-form .webform-component-radios select.description,
+    .webform-client-form .webform-component-radios .form-textarea-wrapper.description {
+      zoom: 1;
+      float: right; }
+      .webform-client-form .webform-container-inline > label.description:before, .webform-client-form .webform-container-inline > label.description:after, .webform-client-form .webform-container-inline > div.description:before, .webform-client-form .webform-container-inline > div.description:after,
+      .webform-client-form .webform-container-inline input[type="text"].description:before,
+      .webform-client-form .webform-container-inline input[type="text"].description:after,
+      .webform-client-form .webform-container-inline input[type="email"].description:before,
+      .webform-client-form .webform-container-inline input[type="email"].description:after,
+      .webform-client-form .webform-container-inline select.description:before,
+      .webform-client-form .webform-container-inline select.description:after,
+      .webform-client-form .webform-container-inline .form-textarea-wrapper.description:before,
+      .webform-client-form .webform-container-inline .form-textarea-wrapper.description:after,
+      .webform-client-form .webform-component-select > label.description:before,
+      .webform-client-form .webform-component-select > label.description:after,
+      .webform-client-form .webform-component-select > div.description:before,
+      .webform-client-form .webform-component-select > div.description:after,
+      .webform-client-form .webform-component-select input[type="text"].description:before,
+      .webform-client-form .webform-component-select input[type="text"].description:after,
+      .webform-client-form .webform-component-select input[type="email"].description:before,
+      .webform-client-form .webform-component-select input[type="email"].description:after,
+      .webform-client-form .webform-component-select select.description:before,
+      .webform-client-form .webform-component-select select.description:after,
+      .webform-client-form .webform-component-select .form-textarea-wrapper.description:before,
+      .webform-client-form .webform-component-select .form-textarea-wrapper.description:after,
+      .webform-client-form .webform-component-textarea > label.description:before,
+      .webform-client-form .webform-component-textarea > label.description:after,
+      .webform-client-form .webform-component-textarea > div.description:before,
+      .webform-client-form .webform-component-textarea > div.description:after,
+      .webform-client-form .webform-component-textarea input[type="text"].description:before,
+      .webform-client-form .webform-component-textarea input[type="text"].description:after,
+      .webform-client-form .webform-component-textarea input[type="email"].description:before,
+      .webform-client-form .webform-component-textarea input[type="email"].description:after,
+      .webform-client-form .webform-component-textarea select.description:before,
+      .webform-client-form .webform-component-textarea select.description:after,
+      .webform-client-form .webform-component-textarea .form-textarea-wrapper.description:before,
+      .webform-client-form .webform-component-textarea .form-textarea-wrapper.description:after,
+      .webform-client-form .webform-component-radios > label.description:before,
+      .webform-client-form .webform-component-radios > label.description:after,
+      .webform-client-form .webform-component-radios > div.description:before,
+      .webform-client-form .webform-component-radios > div.description:after,
+      .webform-client-form .webform-component-radios input[type="text"].description:before,
+      .webform-client-form .webform-component-radios input[type="text"].description:after,
+      .webform-client-form .webform-component-radios input[type="email"].description:before,
+      .webform-client-form .webform-component-radios input[type="email"].description:after,
+      .webform-client-form .webform-component-radios select.description:before,
+      .webform-client-form .webform-component-radios select.description:after,
+      .webform-client-form .webform-component-radios .form-textarea-wrapper.description:before,
+      .webform-client-form .webform-component-radios .form-textarea-wrapper.description:after {
+        content: "";
+        display: table; }
+      .webform-client-form .webform-container-inline > label.description:after, .webform-client-form .webform-container-inline > div.description:after,
+      .webform-client-form .webform-container-inline input[type="text"].description:after,
+      .webform-client-form .webform-container-inline input[type="email"].description:after,
+      .webform-client-form .webform-container-inline select.description:after,
+      .webform-client-form .webform-container-inline .form-textarea-wrapper.description:after,
+      .webform-client-form .webform-component-select > label.description:after,
+      .webform-client-form .webform-component-select > div.description:after,
+      .webform-client-form .webform-component-select input[type="text"].description:after,
+      .webform-client-form .webform-component-select input[type="email"].description:after,
+      .webform-client-form .webform-component-select select.description:after,
+      .webform-client-form .webform-component-select .form-textarea-wrapper.description:after,
+      .webform-client-form .webform-component-textarea > label.description:after,
+      .webform-client-form .webform-component-textarea > div.description:after,
+      .webform-client-form .webform-component-textarea input[type="text"].description:after,
+      .webform-client-form .webform-component-textarea input[type="email"].description:after,
+      .webform-client-form .webform-component-textarea select.description:after,
+      .webform-client-form .webform-component-textarea .form-textarea-wrapper.description:after,
+      .webform-client-form .webform-component-radios > label.description:after,
+      .webform-client-form .webform-component-radios > div.description:after,
+      .webform-client-form .webform-component-radios input[type="text"].description:after,
+      .webform-client-form .webform-component-radios input[type="email"].description:after,
+      .webform-client-form .webform-component-radios select.description:after,
+      .webform-client-form .webform-component-radios .form-textarea-wrapper.description:after {
+        clear: both; }
+  .webform-client-form .form-text,
+  .webform-client-form .form-select,
+  .webform-client-form .form-textarea {
+    width: 100%;
+    max-width: 210px;
+    padding: 4px 5px 4px 5px; }
+  .webform-client-form .form-text,
+  .webform-client-form .form-submit,
+  .webform-client-form .form-textarea {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px; }
+  .webform-client-form .form-text,
+  .webform-client-form .form-textarea {
+    border: 1px solid #d9d9d9; }
+  .webform-client-form .form-checkbox {
+    margin-left: 0; }
+  .webform-client-form fieldset {
+    border: none;
+    padding: 0;
+    margin: 0; }
+  .webform-client-form .form-actions .form-submit {
+    display: inline-block;
+    height: 26px;
+    padding-top: 0;
+    padding-right: 12px;
+    padding-bottom: 0;
+    padding-left: 12px;
+    background: linear-gradient(bottom, #ff6000 0%, #ff9000 54%);
+    background: -webkit-linear-gradient(bottom, #ff6000 0%, #ff9000 54%);
+    background: -moz-linear-gradient(bottom, #ff6000 0%, #ff9000 54%);
+    border: none; }
+    .webform-client-form .form-actions .form-submit:hover, .webform-client-form .form-actions .form-submit:active, .webform-client-form .form-actions .form-submit:focus {
+      background: #ff9000; }
+
+#popups .webform-client-form .webform-component-radios > label, #popups .webform-client-form .webform-component-radios > .form-radios,
+#popups .webform-client-form .webform-component-radios .form-radios .form-item.form-type-radio {
+  float: left;
+  width: 50%;
+  margin-right: 0;
+  margin-left: 0; }
+  #popups .webform-client-form .webform-component-radios > label:first-child, #popups .webform-client-form .webform-component-radios > .form-radios:first-child,
+  #popups .webform-client-form .webform-component-radios .form-radios .form-item.form-type-radio:first-child {
+    padding-right: 10px; }
+  #popups .webform-client-form .webform-component-radios > label.form-item.form-type-radio, #popups .webform-client-form .webform-component-radios > .form-radios.form-item.form-type-radio,
+  #popups .webform-client-form .webform-component-radios .form-radios .form-item.form-type-radio.form-item.form-type-radio {
+    width: 35%;
+    margin-top: 0;
+    margin-bottom: 0; }
+
+html.js #webform-component-vendor-details {
+  display: none; }
+
+/**
+ * Review stars
+ */
+.field-name-field-rating .form-radios,
+#webform-component-star-rating .form-radios {
+  zoom: 1; }
+  .field-name-field-rating .form-radios:before, .field-name-field-rating .form-radios:after,
+  #webform-component-star-rating .form-radios:before,
+  #webform-component-star-rating .form-radios:after {
+    content: "";
+    display: table; }
+  .field-name-field-rating .form-radios:after,
+  #webform-component-star-rating .form-radios:after {
+    clear: both; }
+  .field-name-field-rating .form-radios .form-item.js-star-wrapper,
+  #webform-component-star-rating .form-radios .form-item.js-star-wrapper {
+    position: relative;
+    float: left;
+    width: 26px;
+    height: 24px; }
+    .field-name-field-rating .form-radios .form-item.js-star-wrapper input.form-radio,
+    #webform-component-star-rating .form-radios .form-item.js-star-wrapper input.form-radio {
+      visibility: hidden; }
+    .field-name-field-rating .form-radios .form-item.js-star-wrapper label,
+    #webform-component-star-rating .form-radios .form-item.js-star-wrapper label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: block;
+      width: 26px;
+      height: 24px;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAACACAYAAAAVt3nrAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2hpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowNDgwMTE3NDA3MjA2ODExODA4MzlFOUJCQ0Q4NUQxMSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5MkIwMUU3QTM0MDYxMUUyODdBQ0UzMkUyMEE0M0JFMiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5MkIwMUU3OTM0MDYxMUUyODdBQ0UzMkUyMEE0M0JFMiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RkE3RjExNzQwNzIwNjgxMTgyMkFCQzM4QkExMjQxQUIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDQ4MDExNzQwNzIwNjgxMTgwODM5RTlCQkNEODVEMTEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7o+yGWAAAEhklEQVR42uyaz0/jRhTHnyPfm/4HhhO3LieEBCIh0vZYeuGwCDWuqDhwyC5UQmq3SiJV2krLbkHqBVA34bC9dKXSC1JXEfWKA9zwkVPwHwBLBEvzA7LeN2ZCHHsc/86lM9I3Yztjf/JmnmeenyPoug7MsiEU8PMzyOlPIIKScPxGh29Qj2FdkOIDvRSy8BEkFKDyUYAEW9etGRb8izJbIsP3ejkc6BeYwTpH91Mu7VVUzahX/Y2daHSPO6BTHtB6J1jX/SwQ0F+opIdzZHjqvxu7Y1QUyK89doXkg41V1+vyugptUFDQR7vRuHfbValoQC106ZZRO2kqGlAdQXWjVlBpeK4LRn23T44/CAoSe/aaUMRPBbZ15f7Yb8a2At8ZnilFNzPEVBIwoMJBHMRBHMRBgwBVq9UC6teoQI7r0cnJySld6IZGRka0WCxSVTXbaDQkFKDiib0PDw+Zsff4+Hi42LtSqQSKvTOZjL/Y+/rDh8HF3n+8fu0r9n40Nxc89t7c3PQUey8uLoaLvfEC6tXVlYKCPgoce/cEkGdnZ27tSRfvhga9Pz93i0SngoJ6btiLiwsJRWoFld7a3hZITffJ8Whi78vLSyP2/uft2/vY+883b4zY+8uHD3nszUEcxEEc9L8DibAh+D2nACRNDXAXbuV0jyB/qwSJkjqR699knfLedQTkXVnTdt7Pj/QLypm2U4ZiABFrJMuxfBygPONYCtaEVJSgAsOajkrwXHANpUkmnxXIJ01e9hUq63Id8oRBQuV3dJsUDVZ1rQt6ZlysRKPQZEz36xPyyoBcfCbmiUElY6ShRlE1n67uVTL8oCsJ+o5IRaVRNboflWT48e4VQ8J0MGqYDD9132NY3VtFpUN2Izn3a+vLkgTjl3QsC2pJGQr6rv2GZTdWqYKA3rFnBucTgo7VlF+QFBA0w56Clh1vsjAPTkPwQtd6V9gbZkMp5EyQonOfqetu8dMuyeF4DSWjhlCjqLJDuy/sY8RumGQAihRALq6hVBPUCkzZQex3eUlaa6giaghVQNVsbbdwLLZ0Gbc/p21JG8nuDNm+/ewe5ZQsPiMbi2ASj2v8qZyDOIiDOIiDOIiDOIiDgicGq9VqqMTg8PCwN1C73R5IYlC8vb31AzJH6vk4QTnLQ0DKK0y8ubnxY431ccSzVcLR0ZFX0KnDI2d6bGzMFSa2Wi2vnub0XFs6ODgYnZycrPW1qFKpxJYYzGQy3cTg3t7eYBKDrWZzIIlBsdlqEfNG4e7vH3FYJM/Ozipis9k0iMR7YoDJ8/PzRmKjA4oDJi8sLNxnT8ygqGDE6+SlpaWenJ3YbDRsA0dhxwFB5eWVFVtiULy+vmZ6CVWQ/y8wE4NOIDDdeH4L818c/UBSQNBMZ1HsmYK+lWWnE0IlBn9/9Urrsei/ej1Ka8xrVbkHVPcHqtFuUaj75xwmXFtikOXewLiHCGADtW5xEtLvRboAZi0WWUDs9agDIv28wwDcl/39fdJGnp6eJpY+plZK9qWcDSpTiOfgA4HkhxQmJybWWbPKJwEGAAZTGhRKyJknAAAAAElFTkSuQmCC);
+      background-position: 0 bottom;
+      background-repeat: no-repeat;
+      overflow: hidden; }
+    .field-name-field-rating .form-radios .form-item.js-star-wrapper label.full-star,
+    #webform-component-star-rating .form-radios .form-item.js-star-wrapper label.full-star {
+      background-position: 0 -55px; }
+
+/**
+ * Other vendor field
+ */
+.js #webform-component-new-vendor {
+  display: none; }
+
+/**
+ * Confirmation page
+ */
+.page-node-done .region-content .webform-confirmation {
+  padding-top: 40px; }
+
+#comments .form-item-arr-password {
+  float: left;
+  clear: none;
+  margin-top: 0;
+  margin-bottom: 0; }
+
+.join-arr {
+  float: left;
+  width: 134px;
+  padding-left: 7px; }
+
+#comments .field-name-field-rating {
+  margin-top: 0;
+  margin-bottom: 0; }

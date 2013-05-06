@@ -1,0 +1,63 @@
+/******************************************************************
+Site Name: All Rave Reviews
+Author: Tom Beigle
+
+Stylesheet: Mixins
+
+mixins.css should include all the relevent styles and graphical elements
+for a site, which would include things like icons, fonts, graphical treatments.
+Basically, anything that is related to the sites design, not structure. 
+******************************************************************/
+/*
+How to use color variables properly:
+http://sachagreif.com/sass-color-variables/
+*/
+/*********************
+Color Variables
+*********************/
+/*********************
+Font Variables
+*********************/
+/*********************
+Border Variables
+*********************/
+/*********************
+Width Variables
+*********************/
+/*********************
+Height Variables
+*********************/
+/*********************
+Clearfix
+*********************/
+/*********************
+Width Mixins
+*********************/
+/*********************
+Border Mixins
+*********************/
+/*********************
+Background Mixins
+*********************/
+/*********************
+Hiding stuff
+*********************/
+/*********************
+Font Mixins
+*********************/
+/*********************
+SHADOWS
+*********************/
+/*************************
+Encoded background images
+
+http://webcodertools.com/imagetobase64converter
+*************************/
+.ie7 #page-top {
+  height: 96px; }
+
+.lte8 .lte8-label-show label {
+  display: block; }
+
+.lte9 .front #content-bottom > .columns .block.front-vendors .overlay {
+  display: none; }

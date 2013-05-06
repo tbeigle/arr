@@ -1,0 +1,4 @@
+name = All Rave Reviews
+description = A custom site module for allravereviews.com
+core = 7.x
+package = arr

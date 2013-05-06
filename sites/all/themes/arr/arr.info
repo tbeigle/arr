@@ -1,0 +1,40 @@
+; Basic details
+name = AllRaveReviews.com
+description = Custom template for AllRaveReviews.com.
+core = 7.x
+
+; Features
+features[] = logo
+features[] = favicon
+
+; Regions
+regions[header] = Header
+regions[nav] = Navigation
+regions[content_top] = Left (main) Column Top
+regions[content] = Left (main) Column
+regions[right_col] = Right (sidebar) Column
+regions[content_bottom] = Content Bottom
+regions[footer_top] = Footer Top
+regions[footer_bottom] = Footer Bottom
+regions[popups] = Popups
+
+; JS
+scripts[] = js/main.js
+scripts[] = js/forms.js
+
+; Settings
+; Example from garland
+settings[arr_enable_home_ss] = 0
+
+; CSS
+stylesheets[all][] = styles/css/mixins.css
+stylesheets[all][] = styles/css/style.css
+stylesheets[all][] = styles/css/typography.css
+stylesheets[all][] = styles/css/navigation.css
+stylesheets[all][] = styles/css/home.css
+stylesheets[all][] = styles/css/vendor-categories.css
+stylesheets[all][] = styles/css/forms.css
+stylesheets[all][] = styles/css/popups.css
+stylesheets[all][] = styles/css/tablet.css
+stylesheets[all][] = styles/css/mobile.css
+stylesheets[all][] = styles/css/ie.css

@@ -1,0 +1,774 @@
+@import "mixins";
+
+@font-face {
+  font-family: 'beeoneregular';
+  src: url('../../fonts/bee-one-webfont.eot');
+  src: url('../../fonts/bee-one-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../../fonts/bee-one-webfont.woff') format('woff'),
+       url('../../fonts/bee-one-webfont.ttf') format('truetype'),
+       url('../../fonts/bee-one-webfont.svg#beeoneregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'beethreeregular';
+  src: url('../../fonts/bee-three-webfont.eot');
+  src: url('../../fonts/bee-three-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../../fonts/bee-three-webfont.woff') format('woff'),
+       url('../../fonts/bee-three-webfont.ttf') format('truetype'),
+       url('../../fonts/bee-three-webfont.svg#beethreeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'lusitanabold';
+  src: url('../../fonts/lusitana-bold-webfont.eot');
+  src: url('../../fonts/lusitana-bold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../../fonts/lusitana-bold-webfont.woff') format('woff'),
+       url('../../fonts/lusitana-bold-webfont.ttf') format('truetype'),
+       url('../../fonts/lusitana-bold-webfont.svg#lusitanabold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'lusitanaregular';
+  src: url('../../fonts/lusitana-regular-webfont.eot');
+  src: url('../../fonts/lusitana-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../../fonts/lusitana-regular-webfont.woff') format('woff'),
+       url('../../fonts/lusitana-regular-webfont.ttf') format('truetype'),
+       url('../../fonts/lusitana-regular-webfont.svg#lusitanaregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'steelplategothicrr_shadedRg';
+  src: url('../../fonts/steelplategothic-rr-shaded-webfont.eot');
+  src: url('../../fonts/steelplategothic-rr-shaded-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../../fonts/steelplategothic-rr-shaded-webfont.woff') format('woff'),
+       url('../../fonts/steelplategothic-rr-shaded-webfont.ttf') format('truetype'),
+       url('../../fonts/steelplategothic-rr-shaded-webfont.svg#steelplategothicrr_shadedRg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nexa_boldregular';
+  src: url('../../fonts/nexa_bold-webfont.eot');
+  src: url('../../fonts/nexa_bold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../../fonts/nexa_bold-webfont.woff') format('woff'),
+       url('../../fonts/nexa_bold-webfont.ttf') format('truetype'),
+       url('../../fonts/nexa_bold-webfont.svg#nexa_boldregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nexa_lightregular';
+  src: url('../../fonts/nexa_light-webfont.eot');
+  src: url('../../fonts/nexa_light-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../../fonts/nexa_light-webfont.woff') format('woff'),
+       url('../../fonts/nexa_light-webfont.ttf') format('truetype'),
+       url('../../fonts/nexa_light-webfont.svg#nexa_lightregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*********************
+LINKS
+*********************/
+a {
+	&:link, &:visited {
+  	color: $col-footer-link;
+  	text-decoration: none;
+	}
+	
+	&:hover, &:focus {
+  	text-decoration: underline;
+	}
+} 
+
+li a.active {
+}
+
+.img-wrapper {
+  font-size: 0;
+  line-height: 0;
+}
+
+.stars {  
+  font: {
+    size: 12px;
+    family: $family-sans-gotham-bold;
+  }
+  
+  line-height: 1.25;
+  color: $col-ven-top;
+  @include font-upper;
+}
+
+body {
+  @include main-text;
+}
+
+#nav {
+  ul {
+    li {      
+      font: {
+        weight: normal;
+        size: 20px;
+        family: $family-sans-gotham;
+      }
+      
+      line-height: normal;
+      text-transform: uppercase;
+      
+      a {
+        &:link,
+        &:visited,
+        &:hover,
+        &:active {
+          text-decoration: none;
+          color: $col-lightest;
+        }
+        
+        &:hover,
+        &:active {
+          text-decoration: underline;
+        }
+      }
+      a.no-link {        
+        &:hover,
+        &:active {
+          text-decoration: none;
+        }
+      }
+      
+      ul {
+        li {
+          font: {
+            size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+#content-top {
+  font: {
+    size: 12px;
+    family: $family-serif-bold;
+  }
+  
+  #description-wrapper {
+    text-transform: none;
+  }
+  
+  line-height: 2.166;
+  color: $col-ven-top;
+  
+  @include font-upper;
+  
+  .vendor-top {    
+    font: {
+      size: 13px;
+      family: $family-sans-gotham-bold;
+    }
+    
+    line-height: 1;
+    
+    @include font-upper;
+  }
+  
+  h1 {
+    font: {
+      weight: normal;
+      size: 79px;
+      family: $family-bee-3;
+    }
+    line-height: 0.78;
+    @include font-upper;
+  }
+  
+  a.toggle-description {
+    font: {
+      size: 11px;
+      family: $family-sans-gotham-bold;
+    }
+    
+    line-height: 1;
+    @include font-upper;
+    
+    &:link,
+    &:visited {
+      color: $col-darkest;
+    }
+    
+    &:link {
+      text-decoration: none;
+    }
+  }
+}
+
+.breadcrumb {
+  li {
+    font: {
+      size: 12px;
+      family: $family-sans-gotham-bold;
+    }
+    
+    line-height: 1;
+    color: $col-bc-cur;
+    @include font-upper;
+    
+    a {
+      &:link,
+      &:visited {
+        color: $col-bc-link;
+        text-decoration: underline;
+      }
+      &:hover,
+      &:active {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+#content {
+  .node-full {
+    .vendor-top {
+      .lowest-cost-bubble {
+        /*font: {
+          size: 9px;
+          family: $family-sans-gotham-bold;
+        }
+        
+        line-height: 11px;
+        color: $col-lightest;
+        text-transform: uppercase;*/
+      }
+    }
+    
+    .field-name-field-pros,
+    .field-name-field-cons,
+    .field-name-field-bottom-line {
+      .field-label {
+        font: {
+          size: 15px;
+          family: $family-sans-gotham-bold;
+        }
+        
+        line-height: 1.4166;
+        color: $col-pc-label;
+      }
+    }
+  }
+}
+
+a.contact-vendor-button {
+  text-align: center;
+  
+  font: {
+    size: 54px;
+    family: $family-bee-3;
+  }
+  
+  line-height: 70px;
+  text-decoration: none;
+  
+  @include font-upper;
+  
+  &:link,
+  &:visited {
+    color: $col-lightest;
+  }
+}
+
+#comments {  
+  font-size: 12px;
+  
+  .comment {
+    h3 {
+      font: {
+        weight: normal;
+        size: 12px;
+      }
+    }
+    
+    .created-date,
+    .comment-author {
+      font-weight: bold;
+    }
+    
+    ul.links {
+      a {
+        &:link,
+        &:visited {
+          font-weight: bold;
+          color: $col-comment-link;
+          text-decoration: underline;
+        }
+        
+        &:hover,
+        &:active {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+          
+  .title.leave-review,
+  .title.user-reviews {
+    font: {
+      weight: normal;
+      size: 53px;
+      family: $family-bee-3;
+    }
+    
+    line-height: 1;
+    @include font-upper;
+    color: $col-ven-top;
+  }
+  .comment-form {
+    .comment-submit {
+      font: {
+        size: 14px;
+        family: $family-sans-gotham-bold;
+      }
+      
+      line-height: 22px;
+      color: $col-lightest;
+    }
+  }
+}
+
+.field-name-field-rating,
+#webform-component-star-rating {
+  .form-radios {
+    .form-item.js-star-wrapper {
+      label {
+        text-indent: -9999px;
+        font-size: 0;
+        line-height: 0;
+      }
+    }
+  }
+}
+
+#block-menu-menu-footer-navigation {
+  text-align: center;
+  
+  ul {
+    li {
+      font: {
+        weight: $weight-main;
+        size: 9px;
+        family: $family-main;
+      }
+      
+      line-height: 13px;
+      
+      a {
+        &:link,
+        &:visited {
+          color: $col-footer-link;
+          text-decoration: none;
+        }
+        
+        &:hover,
+        &:active {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.with-right-col.page-node {
+  #page-main {
+    &> .columns {
+      &>.column.right {
+        h2 {          
+          text-transform: uppercase;
+          
+          font: {
+            weight: normal;
+            size: 15px;
+            family: $family-steelplate;
+          }
+          
+          line-height: 19px;
+          color: $col-ven-top;
+        }
+        
+        ul {
+          li {
+            a {
+              font: {
+                size: 11px;
+              }
+              
+              line-height: 15px;
+              
+              &:link,
+              &:visited {
+                text-decoration: underline;
+                color: $col-ven-top;
+              }
+              
+              &:hover,
+              &:active {
+                text-decoration: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Slideshow
+ */
+html {
+  .field-collection-container {
+    .field-name-field-slides {
+      .field-collection-item-field-slides {
+        .field-name-field-slide {
+          .field-items {
+            .field-item {
+              .left {
+                .inner {
+                  h2 {        
+                    text-align: center;
+                    
+                    font: {
+                      weight: normal;
+                      size: 124px;
+                      family: $family-bee-3;
+                    }
+                    
+                    line-height: 0.75;
+                    
+                    @include font-upper;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Bubble menus
+ */
+.bubble-links-menu-block {
+  font: {
+    size: 17px;
+    family: $family-sans-gotham;
+  }
+  
+  line-height: 21px;
+  
+  ul.menu {
+    text-align: center;
+    
+    li {
+      a {
+        text: {
+          align: center;
+          transform: uppercase;
+        }
+        
+        &:link,
+        &:visited {
+          color: $col-bg-front-pm;
+        }
+        
+        &:hover,
+        &:active {
+          /*text-decoration: none;*/
+        }        
+      }
+    }
+  }
+}
+
+/**
+ * Forms
+ */
+.webform-client-form {
+  .form-actions {
+    .form-submit {
+      font: {
+        size: 14px;
+        family: $family-sans-gotham-bold;
+      }
+      
+      line-height: 22px;
+      color: $col-lightest;
+    }
+  }
+}
+.webform-confirmation {
+}
+
+/**
+ * Popups
+ */
+#popups {
+  line-height: $line-main;
+  text-transform: none;
+  
+  font: {
+    weight: $weight-main;
+    size: $size-front-main;
+    family: $family-main;
+  }
+  
+  color: $col-main-txt;
+  
+  h2 {
+    font: {
+      weight: normal;
+      size: 17px;
+      family: $family-sans-gotham;
+    }
+    
+    line-height: 21px;
+    color: $col-bg-front-pm;
+    text-transform: uppercase;
+  }
+  
+  .close-popup {
+    line-height: 32px;
+    text-align: center;
+    
+    font: {
+      size: 16px;
+      family: $family-sans-gotham;
+    }
+    
+    &:link,
+    &:visited {
+      color: $col-top-bor-b;
+    }
+    
+    &:hover,
+    &:active {
+      text-decoration: none;
+      color: $col-darkest;
+    }
+  }
+}
+
+/**
+ * Home
+ */
+.front {
+  @include front-text;
+  
+  #messages-wrapper,
+  #messages-wrapper > .columns,
+  #page-main,
+  #page-main > .columns {
+    color: $col-lightest;
+  }
+  
+  #page-main {
+    #content-top {
+      h1 {
+        font: 13px/21px $family-sans-gotham;
+        @include font-upper;
+      }
+    }
+  }
+  
+  #content-bottom {
+    font: {
+      weight: bold;
+      size: 11px;
+      family: $family-main;
+    }
+    
+    line-height: 15px;
+    color: $col-front-pb;
+    
+    a:link,
+    a:visited {
+      color: $col-front-pb;
+    }
+    
+    &> .columns {
+      .block {
+        h2 {
+          font: {
+            weight: normal;
+            size: 12px;
+            family: $family-sans-gotham-bold;
+          }
+          
+          line-height: 16px;
+        }
+        
+        &.front-vendors {
+          ul.front-vendors-slider {
+            white-space: nowrap;
+            
+            li {
+              
+              a {
+                &:hover,
+                &:active {
+                  text-decoration: none;
+                }
+              }
+            }
+          }
+        }
+        
+        &.popular-categories {
+          .content {
+            ul {
+              li {
+                text-transform: none;
+                
+                a {
+                  &:link,
+                  &:visited {
+                    text-decoration: underline;
+                  }
+                  
+                  &:hover,
+                  &:active {
+                    text-decoration: none;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Tech specs on vendor pages
+ */
+.page-node.node-type-vendor {
+  #node-tech-specs-collapsibles {
+    .node-specs.collapsible-container {
+      .node-spec-cat-title {
+        a {
+          font: {
+            size: 15px;
+            family: $family-sans-gotham-bold;
+          }
+          
+          line-height: 19px;
+          
+          &:link,
+          &:visited {
+            color: $col-pc-label;
+          }
+          
+          &:hover,
+          &:active {
+            text-decoration: none;
+          }
+          
+          .plus-minus {
+            font: {
+              size: 19px;
+            }
+          }
+        }
+      }
+      
+      .collapsible {
+        .specs-row {
+          &> div {
+            &.specs-left {
+              font: {
+                size: 13px;
+                family: $family-sans-gotham-bold;
+              }
+              
+              line-height: 18px;
+              color: $col-pc-label;
+              text-transform: uppercase;
+            }
+            
+            &.specs-right {
+              font: {
+                size: 12px;
+              }
+              
+              line-height: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#buttons-vendor-top {
+  a {
+    font: {
+      size: 10px;
+      family: $family-sans-gotham-bold;
+    }
+    
+    line-height: 14px;
+    letter-spacing: 1px;
+    
+    &:link,
+    &:visited,
+    &:hover,
+    &:active {
+      color: $col-lightest;
+      
+      text: {
+        decoration: none;
+        transform: uppercase;
+      }
+    }
+    
+    &:hover,
+    &:active {
+    }
+  }
+}
+
+
+.join-arr {  
+  font: {
+    size: 11px;
+  }
+  
+  line-height: 15px;
+  
+  a {
+    &:link,
+    &:visited {
+      color: $col-not-arr-member;
+      text-decoration: underline;
+    }
+    
+    &:hover,
+    &:active {
+      text-decoration: none;
+    }
+  }
+}

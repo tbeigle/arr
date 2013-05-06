@@ -1,0 +1,274 @@
+@import "mixins";
+
+form {
+  max-width: 520px;
+  
+  &> div &> .form-item {
+    @include clear-fix;
+  }
+}
+
+.form-text,
+.form-select,
+.form-textarea {
+  width: 100%;
+  max-width: 210px;
+  padding: 4px 5px 4px 5px;
+}
+
+.form-text,
+.form-submit,
+.form-textarea {
+  @include b-radius(6px);
+}
+
+.form-text,
+.form-textarea {
+  border: 1px solid $col-field-border;
+}
+
+.form-checkbox {
+  margin: {
+    left: 0;
+  }
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/**
+ * Form actions
+ */
+.form-actions {
+  .form-submit {
+    display: inline-block;
+    height: 26px;
+    
+    padding: {
+      top: 0;
+      right: 12px;
+      bottom: 0;
+      left: 12px;
+    }
+    
+    @include bg-linear-grad(bottom, $col-button-bottom 0%, $col-bc-link 54%);
+    
+    border: none;
+    
+    &:hover,
+    &:active,
+    &:focus {
+      background: $col-bc-link;
+    }
+  }
+}
+
+/**
+ * Webforms
+ */
+.webform-client-form {
+  max-width: 520px;
+  
+  .webform-component {
+    @include clear-fix;
+  }
+  
+  .webform-container-inline,
+  .webform-component-select,
+  .webform-component-textarea,
+  .webform-component-radios {
+    &> label,
+    &> div,
+    input[type="text"],
+    input[type="email"],
+    select,
+    .form-textarea-wrapper {
+      @include form-two-cols-col;
+      
+      &.description {
+        @include clear-fix;
+        float: right;
+      }
+    }
+  }
+  
+  .form-text,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    max-width: 210px;
+    padding: 4px 5px 4px 5px;
+  }
+  
+  .form-text,
+  .form-submit,
+  .form-textarea {
+    @include b-radius(6px);
+  }
+  
+  .form-text,
+  .form-textarea {
+    border: 1px solid $col-field-border;
+  }
+  
+  .form-checkbox {
+    margin: {
+      left: 0;
+    }
+  }
+  
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /**
+   * Form actions
+   */
+  .form-actions {
+    .form-submit {
+      display: inline-block;
+      height: 26px;
+      
+      padding: {
+        top: 0;
+        right: 12px;
+        bottom: 0;
+        left: 12px;
+      }
+      
+      @include bg-linear-grad(bottom, $col-button-bottom 0%, $col-bc-link 54%);
+      
+      border: none;
+      
+      &:hover,
+      &:active,
+      &:focus {
+        background: $col-bc-link;
+      }
+    }
+  }
+}
+
+#popups {
+  .webform-client-form {
+    .webform-component-radios {
+      &> label,
+      &> .form-radios,
+      .form-radios .form-item.form-type-radio {
+        @include form-two-cols-col;
+        
+        &.form-item.form-type-radio {
+          width: 35%;
+          
+          margin: {
+            top: 0;
+            bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+html {
+  #webform-client-form-12 {
+    #webform-component-vendor-details {
+    }
+  }
+  
+  &.js {
+    #webform-component-vendor-details {
+      display: none;
+    }
+  }
+}
+
+/**
+ * Review stars
+ */
+.field-name-field-rating,
+#webform-component-star-rating {
+  .form-radios {
+    @include clear-fix;
+    
+    .form-item.js-star-wrapper {
+      position: relative;
+      float: left;
+      width: 26px;
+      height: 24px;
+      
+      input.form-radio {
+        visibility: hidden;
+      }
+      
+      label {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        width: 26px;
+        height: 24px;
+        
+        background: {
+          @include stars-sprite;
+          position: 0 bottom;
+          repeat: no-repeat;
+        }
+        
+        overflow: hidden;
+      }
+      
+      label.full-star {
+        background: {
+          position: 0 -55px;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Other vendor field
+ */
+.js #webform-component-new-vendor {
+  display: none;
+}
+
+/**
+ * Confirmation page
+ */
+.page-node-done {
+  .region-content {
+    .webform-confirmation {
+      padding-top: 40px;
+    }
+  }
+}
+
+#comments .form-item-arr-password {
+  float: left;
+  clear: none;
+  
+  margin: {
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.join-arr {
+  float: left;
+  width: 134px;
+  padding-left: 7px;
+}
+
+#comments .field-name-field-rating {
+  margin: {
+    top: 0;
+    bottom: 0;
+  }
+}

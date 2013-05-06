@@ -1,0 +1,280 @@
+/******************************************************************
+Site Name: All Rave Reviews
+Author: Tom Beigle
+
+Stylesheet: Mixins
+
+mixins.css should include all the relevent styles and graphical elements
+for a site, which would include things like icons, fonts, graphical treatments.
+Basically, anything that is related to the sites design, not structure. 
+******************************************************************/
+/*
+How to use color variables properly:
+http://sachagreif.com/sass-color-variables/
+*/
+/*********************
+Color Variables
+*********************/
+/*********************
+Font Variables
+*********************/
+/*********************
+Border Variables
+*********************/
+/*********************
+Width Variables
+*********************/
+/*********************
+Height Variables
+*********************/
+/*********************
+Clearfix
+*********************/
+/*********************
+Width Mixins
+*********************/
+/*********************
+Border Mixins
+*********************/
+/*********************
+Background Mixins
+*********************/
+/*********************
+Hiding stuff
+*********************/
+/*********************
+Font Mixins
+*********************/
+/*********************
+SHADOWS
+*********************/
+/*************************
+Encoded background images
+
+http://webcodertools.com/imagetobase64converter
+*************************/
+p.spec-info, p.no-ratings {
+  margin: 0;
+  text-align: center; }
+
+.vendor-categories-page .breadcrumb {
+  display: none; }
+.vendor-categories-page .lowest-cost-bubble {
+  position: absolute;
+  right: 0;
+  top: -36px; }
+.vendor-categories-page #content .region-content #block-system-main > .content {
+  padding-top: 0; }
+.vendor-categories-page #page-main #content-top {
+  padding-right: 15px;
+  padding-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 0; }
+.vendor-categories-page #page-main #content {
+  padding-right: 0;
+  padding-left: 0; }
+.vendor-categories-page .taxonomy-term.vocabulary-categories .taxonomy-term-description {
+  padding-right: 15px;
+  padding-bottom: 7px;
+  padding-left: 30px;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 0;
+  font-size: 12px;
+  font-family: lusitanabold, serif;
+  line-height: 26px;
+  color: #333333; }
+.vendor-categories-page #vendors-by-category-wrapper {
+  position: relative;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px; }
+  .vendor-categories-page #vendors-by-category-wrapper #js-more-vendors {
+    position: absolute;
+    right: -71px;
+    top: 0;
+    z-index: 1000;
+    display: block;
+    width: 71px;
+    height: 80px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAABQCAYAAABLY2g8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOEE2RDgwNUJBNTU2RDJGRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCNkY5OTlDNTY1OTcxMUUyOUUwOUJDRDIxQjZGM0NFOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCNkY5OTlDNDY1OTcxMUUyOUUwOUJDRDIxQjZGM0NFOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjA2ODAxMTc0MDcyMDY4MTE5NjUyRDM0QkJBMTREOUREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4QTZEODA1QkE1NTZEMkZFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+oiHvFwAADUVJREFUeNrsXHtQlccVXztpfKL4BoMWFBVFBd/ROBUCvhIfaLRqCylGZ6idaaNO/7DTcVInk9HOZIptZ9IwjcEWo1GZqNVoqIqi1hiTChqo+CCiIiC+xWdm4PYczn7d/fbb73G5FycT75nZud/u2e/sOb895+zjcmnlA2JmagUlAsoCKDOgxEPpyb5fdB9KBZR9ULZBOaHr1EoDzjtQVkBpy54d2s1tPu8GzrNKd3i0FITA0dO3UKZBKQyBo6cbUAZCufWDEBYW6gbldyHPsaeHULqHPEdP7aBMDoFjT+ND4NhTr+cc2TVl5nrXGMaeb2ftd6uSsScPRD2sB2MduutlYt/qU9C/nqe//oxFDtXL/RZC/+ZFvZzIeP/6e9FN2SA7g7N1iLmesoOxIbOs/bZNYuzxBVGfkMfYyHQr0Cf+wlhljvX9NrGMjXqLsaFzzCChoaoOMg1cydjLq8Q7bv3tdLMh/8KqbKO17dIXZmB0dO4AKa0DBgnfP5rB2Paf0+x7pbNrGdv8SovFlbPnqIt8TT6FRZdo0XZmh7WfGkZ7UkU9OouxwfPAvSOofvEwY6f/SACh/ELwoqlrrDokQFvcDHqur4V+v6B3bhcR+ANSzP1xnN4TNJlkeJDAkQ2qPUDKlO+FPL5UxHj5WnqOWymeZToheQv2kQ03ckcc7Nj/EUN1lDEmyzwBSB2jRJ7Bz3oIwyMZHKwa67gIjMfwaV5Y+aQyYDF9ntsi+JWfC37fVPEs05m1on3CCv04CMSwNaLfxaNWHdTEe36n4IVFWvvfraI8pxY/wvY5zz37JjMGi0yTG+MgOHtl2/hMzhVhYrfaYR+nVcKQj3T5qHXWD2dQUakthGH0OGv7qd9SUWlBqX6la7bnNIXWWFpVsH5mF2P3r8MM51A9Pt3qaaqM1l2dNWndQe8lPoeC+kzdaF7hfC4l6AnZ+MTQKoHZKF8P+5NBoj1mPMR9nXVw3FMYbTUHnDW5fkH07Rht1SEG8lAfyCNFGcJjlp6319nor9vnBD2skPqB65fA5yMwZF+aUALDBcFRCds7T6RQxHfOAkADU/Syv8oWz1GjrXw0dFQ65RKcIJR3GvLOsFl6eUb/p5KQ1dAySvw8vTsbNHSJaNsPy291mTW5HoCkfatIhErMOHuZYxaL+pHfmBNsACEU+D6naVcKyhVLiS5mnHP/0TB752CGq2EP8xBm+6Mh5E2d44j/jbIxfFWTQ0xhAd6YuIZ0QHmH/8xY6kpr/0MZVCyJHzz9tfdbYIeMFJssngev1J+JVJr3d1LKIAwzBEUGBnPIzP3knW40drF4RpBUb3wqO+QYblCPBGlDOFa0D06TVpv2ol3edyAhgDhb1b9i7CR4xsV8yhlNO1ZY4gdC3kiYYwXaTiZ6TxKckS7x/VAF7LJ7xZv725Fsi9vJM3QTaEub7D3nBD9kDppCM4V0A85J38BsdYRZjEsRfWQaAzmmHvZAZwpE3aByWK3u1ZDMpt1zgfnd7v1h5pWwQlnF4GnXYIcYDkt8/AzyEiQMp6pi6YgBevUdZ/ZATNhn9kHe28u3I3BUSZgVYFiVfEArSFSpAAeBKYQk1y+LwCnMsAGnTvD6wpLaje9bvoYddUUOyUTSvf8ChFnGNjEZH00SIYj0H8gx848TiAiMKgNz18/2iTG3wEn/ar7g4/hP8syT5ndCDo+jzH+l2LpUGpsroz4CVo/kPCpq3/pr9ucko/46gJW2n5bxqnyRYI/l0Io0/j3qgwsA9v8y1/w+5i2Dj/2P5QhwUR6ujiseMLbkIvUv3xmkfY7p3qVebxy6+th0Kup+o+68+3EAwwQ9sVeKeUJK+aH1x0upD563sH4hxyyvTVfiT11F9QruKVWnqI7bBgw19CasV+UHCE7PBCs4tXwwzA3MZbNl8GrL3D3Ha92tDwKAzw95GD6p9ybT75zTOoyEPK7XHCI72G/6VK+r/tzZMKcduc/Fm30uMn0exgwInJpT0q1eObV17OEdnBtFzsa5Ge8W6oHWmxVWPWKtqN/g5x9j9fISVliulj2dsGquTL/B8fkxkJ0BXSbyW7la57sWp7DywrfT0cdaKOd05Hcxj25S/d51fl2a5c1Fm8CJI2+7W/PdCavJeUHIOR27k+DLfNm7V+dfcjP69s+izeO49O9GQh6XHoScY0eRCf717xxNifxp0BPl8rxNGH0a3h/Uyy6cdQN1zBs+aUB5Zq7BvqKqjIrKC49i7HpRyybkhzdp7N1vU30Yv9/pnSC8v+xAkMExBsd8g3kDnztpvgbZkcZYzhAqqnv3Gc53pWX2bu8WNm7goPE4dslayonTV/GDLHht0nvU5+NUvwFyBqdNZw6OlG86RVgVfRHOVlPzqKg8I7HfqfV/9XMDx3jGw+YA7uXlcLQ4L208X15K+iFvMwBUeiBI4OD3O4YCeBj08QsoVdFhcLZ6KZ2KagAm9naxYsVy+7rE360DPveGM1nG+4xllVL938o16KsQZtPyBEAXvgjiBXtTUrvNz1XR3vYMMi8KlK842nKeY9R788m8pDlY4sTN5t/r7383COD0hANmoxQSjQq/UdMm83zSCne93CpDfd+Nr2trVAB00mnULOJV5gcBHDxgNiA4EBIX8Tsn5X62gRfd7DZISnbqBafzIqo3SLNtvC8bJstT+eo76jjqO3dhIbkM6aCuUs8PeLUyZqb+gv+eY/AiYum5NMfZMxoVT3DzHJ+DDKRTBYz9CVaxXWu96ezXtw994sVM4qf6ZyFOMyB7QM8Yfd8GG4/zOchvcOjvLz9gz0Fhn62mz85RzQur1u1ouW14ymHlxg8YnB5wsr7HQ6p1WPMSMlJ0inMIyGHib1j5mskPGJxucUJgZKxeUZ3nqEr0n2Du72tGzvH5mXPc+AHlHN3yqoLDPHpO50i9F+jGMs5vjR7G1HmGP/yAPAcPbwba0fF6z6mGsKsso2ILToT9LOJ7xbBVKOarWV9+8u83V/CRKoqpPizLW9hE8n3afX4qf/yQ6j0nBslz2oa5e8566Tvz9T690ghso3JEMOpvSwfWyXAOiuCr4gjYtJ2FDds6kB+bQuA1nZcW2YPTPpa2HUgxQ6mOMv4wj/4aDfvHTw0SOF0gHBKzzMcGgxJtvrRv2554fZS7n5fgjPPgNvHV938EfaMGACDSHzelptPk7M1m7CQA0wtmfNpyxgaNNesmjzP9LcbOwFGltpJAXrmPsW1rCdgwAGoSgD/r157ACf0hgT1tCv0wJKjXpCFwQhQCJ6DV6vjvzfV+sKR2T+R7jh2MXS8RPGzvx5f0e7BS/HeDdPURztjwZd7k4nv3KvVycTwc16tc5GGfZpLzaoWK/muRWZm5B0nhJ3cYy082AzQ5l7HBmfSM78kAoYHIRxlOclHertlmgJzkYvvkXHd9m7FauS/lqOzWZALDGPAnEkBbFYCSYE8ygs9mAShatsHsBfguysD2AsUQJ7lTAID4TL3c3kmMzdzuLjfo4CDVgZJbFIDmw4A9uCHIq5MMGQJGTOWz+RkoWioZgu/M5wD5KzcZgB+5zF0uth9crpcbdHAMgDYrhqRkExDYtlkD0CscoK/WMVa43GzIQgkgVe5CCSAnuXs0AHmRG/RNIApdAMKfD6fzySMYdDco9/UGGhh5sWni4Hca2j/l7j0KZntaruDVguKbQPHHd/RyPxxuloshoZOLIPkjF3mXD7XQUt6Tz8wPw8WN2j8XkcJtoG3OdsoLBq8E2ndxQ4byGTd41WDIBwDCtRJ3uQs58F7lbuQAqXIfQFteMsltkX0ODvjadqFM0zXqclIGaVK22chiUOQUV2ZYJiVPg4e//yxaLeSmZuvlIkDTc61yKw/p5SJABcuF3FFvWuUG5VSuErru5tniHhYVf/0gfaIhuck0Q/9fveCUnMBXmR0w2xWSW0eA4jN5/kBjUWmvctPgvegke7lTsoXcwtWCZ8gNOjg40B7JS3CgzIOkDLZ9CAbUSMlzDhgwnAPzySJ636AYMOyn20kGtn+yyGyAIfcOeNem2d7lYvscCXA7uUEF5yQMlK8M9AYMFJlIiiNPNmCuZADyTkoGjMgkvhe5f0sWk+FF7hwbuSgvfTv9vVBQjg8GfQkDfSwN1BYMWMwNuAoG/DWZVgODFuSSoti2czm9b9BoCRhV7gsgb+lBku8mF3lXS7zLXcLlBu1s1XRegYHypIGiYKBlfKAqUG6dYkBGLimKbcirkgx4MZMMtJO71EYutqHchDR3ufkwGQfX6eX6Rz5ncI6BAbmSAb1hoDf5QFdAuXdByYfcgHbQ9ktw24FJ1Ia8K5IB4zPJQCSUeWyDd7nIwz46uamwh5qf7S7Xf6p23iGXKxumPomkLNLlEmEAEv6uwPilCrZfLjG/G5cUuFz8occN6UCK7/RJ9CbXf1oQukPW0yNM4aHLLj3hn4bdDXmOlUL/Cs+G8J8ozkdgQnfIZsJ/5or/QaDQ6eD5Dk9IzxJ9CmUk3gW43SEb//L3Dby9xVtavOD8noGBvwPAL9SPQMGfOB/XdfqfAAMA/WUm8yR8QLkAAAAASUVORK5CYII=);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden; }
+  .vendor-categories-page #vendors-by-category-wrapper .tab-shadow {
+    position: absolute;
+    z-index: 900;
+    right: 0;
+    width: 37px;
+    height: 11px; }
+    .vendor-categories-page #vendors-by-category-wrapper .tab-shadow.top {
+      top: -11px;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAALCAYAAAD4OERFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOEE2RDgwNUJBNTU2RDJGRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFRkY2NTY3RTY1OTQxMUUyOUUwOUJDRDIxQjZGM0NFOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpFRkY2NTY3RDY1OTQxMUUyOUUwOUJDRDIxQjZGM0NFOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjA2ODAxMTc0MDcyMDY4MTE5NjUyRDM0QkJBMTREOUREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4QTZEODA1QkE1NTZEMkZFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+CeEGEwAAAHFJREFUeNrMUlsKwDAIa0buf2XHPgYO6pOWNT/VoDFoISLjNFzjQFAnAP7wANfU7mGtTW0aiGodFwmj0Wf2cIGYl6PTx6QhFGKPSxlm4SyWMAIDcGqnMYsbQWDG4rLG3T/1QCan1Nwb63cYXISP7i3AAG+ODGNHZxS3AAAAAElFTkSuQmCC);
+      background-repeat: no-repeat;
+      background-position: 0 0; }
+    .vendor-categories-page #vendors-by-category-wrapper .tab-shadow.bottom {
+      top: 80px;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAALCAYAAAD4OERFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOEE2RDgwNUJBNTU2RDJGRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCNkY5OTlDMTY1OTcxMUUyOUUwOUJDRDIxQjZGM0NFOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCNkY5OTlDMDY1OTcxMUUyOUUwOUJDRDIxQjZGM0NFOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjA2ODAxMTc0MDcyMDY4MTE5NjUyRDM0QkJBMTREOUREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4QTZEODA1QkE1NTZEMkZFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+GmVYUAAAAHRJREFUeNrM0UsOgCAMBNDO/Q9dSQiLkn4nMWE2Vir1iVBVOcGK2OC6nhpBH4M1b+4uEhQSHIZrFcq860aFevLUKrRbVyjpDGn8EgzmuKgIFvVAfEB6H6EqSLcPZk8XNUUyz45Pigk97E8UjTeoV/Ik6hNgAJ8LIVRFOjSTAAAAAElFTkSuQmCC);
+      background-repeat: no-repeat;
+      background-position: 0 0; }
+  .vendor-categories-page #vendors-by-category-wrapper > .inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-top: 12px; }
+    .vendor-categories-page #vendors-by-category-wrapper > .inner.has-lowest-cost {
+      top: -24px;
+      padding-top: 36px; }
+.vendor-categories-page #vendors-by-category {
+  width: auto;
+  white-space: nowrap;
+  border: none;
+  border-spacing: 0; }
+  .vendor-categories-page #vendors-by-category thead,
+  .vendor-categories-page #vendors-by-category tbody,
+  .vendor-categories-page #vendors-by-category tr,
+  .vendor-categories-page #vendors-by-category td,
+  .vendor-categories-page #vendors-by-category th {
+    border: none;
+    padding: none;
+    border-spacing: 0; }
+  .vendor-categories-page #vendors-by-category tr th,
+  .vendor-categories-page #vendors-by-category tr td {
+    white-space: normal; }
+    .vendor-categories-page #vendors-by-category tr th .cell-wrapper,
+    .vendor-categories-page #vendors-by-category tr td .cell-wrapper {
+      display: inline-block; }
+    .vendor-categories-page #vendors-by-category tr th.key-column,
+    .vendor-categories-page #vendors-by-category tr td.key-column {
+      font-weight: bold;
+      font-size: 12px;
+      font-family: nexa_boldregular, "Arial Narrow", Arial, sans-serif;
+      line-height: 1.545;
+      text-align: right;
+      text-transform: uppercase;
+      color: #113a60; }
+      .vendor-categories-page #vendors-by-category tr th.key-column .cell-wrapper,
+      .vendor-categories-page #vendors-by-category tr td.key-column .cell-wrapper {
+        display: inline-block;
+        width: 125px;
+        padding-right: 5px; }
+    .vendor-categories-page #vendors-by-category tr th.vendor-column .cell-wrapper,
+    .vendor-categories-page #vendors-by-category tr td.vendor-column .cell-wrapper {
+      width: 156px;
+      padding: 8px; }
+  .vendor-categories-page #vendors-by-category tr.top-row th {
+    position: relative;
+    height: 80px;
+    padding: 0;
+    vertical-align: middle; }
+    .vendor-categories-page #vendors-by-category tr.top-row th.vendor-column {
+      text-align: center;
+      font-size: 0;
+      line-height: 0; }
+    .vendor-categories-page #vendors-by-category tr.top-row th a {
+      display: inline-block; }
+  .vendor-categories-page #vendors-by-category tr td {
+    border-top: 2px solid white; }
+    .vendor-categories-page #vendors-by-category tr td.vendor-column {
+      background: #e2e2e2;
+      border-right: 1px solid white;
+      border-right-color: rgba(255, 255, 255, 0.4); }
+  .vendor-categories-page #vendors-by-category tr.ratings td {
+    height: 38px;
+    vertical-align: middle; }
+    .vendor-categories-page #vendors-by-category tr.ratings td.vendor-column {
+      text-align: center;
+      font-size: 0;
+      line-height: 0; }
+      .vendor-categories-page #vendors-by-category tr.ratings td.vendor-column p {
+        font-size: 11px; }
+      .vendor-categories-page #vendors-by-category tr.ratings td.vendor-column ul {
+        display: inline-block; }
+  .vendor-categories-page #vendors-by-category tr.ratings.collapsible-button-row td.key-column {
+    vertical-align: top; }
+  .vendor-categories-page #vendors-by-category tr.links {
+    text-align: center;
+    text-transform: uppercase; }
+    .vendor-categories-page #vendors-by-category tr.links p a {
+      font-size: 11px;
+      font-family: nexa_boldregular, "Arial Narrow", Arial, sans-serif; }
+      .vendor-categories-page #vendors-by-category tr.links p a:hover, .vendor-categories-page #vendors-by-category tr.links p a:active {
+        text-decoration: none; }
+    .vendor-categories-page #vendors-by-category tr.links p.vendor-link {
+      display: inline-block;
+      background: #ff3000;
+      background: linear-gradient(bottom, #ff6000, #ff9000);
+      background: -webkit-linear-gradient(bottom, #ff6000, #ff9000);
+      background: -moz-linear-gradient(bottom, #ff6000, #ff9000);
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      margin-bottom: 14px; }
+      .vendor-categories-page #vendors-by-category tr.links p.vendor-link a {
+        display: inline-block;
+        min-height: 30px;
+        padding: 8px 10px 8px 20px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2hpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOEE2RDgwNUJBNTU2RDJGRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGRjIyRTA3QTVCNjAxMUUyOTNDREM5OTY5RUNENEJFQyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGRjIyRTA3OTVCNjAxMUUyOTNDREM5OTY5RUNENEJFQyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MDI4MDExNzQwNzIwNjgxMTgwODNBQTA3MTI5MzE1RDIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDE4MDExNzQwNzIwNjgxMThBNkQ4MDVCQTU1NkQyRkUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4Jb6ahAAAANElEQVR42mL4////QSB2BGIGZAwiYACkwAGbBIoCJgZM8AeMkVTuBWJbZKNAAnbolgMEGADw42iSmBv6zgAAAABJRU5ErkJggg==);
+        background-position: 10px center;
+        background-repeat: no-repeat; }
+        .vendor-categories-page #vendors-by-category tr.links p.vendor-link a:link, .vendor-categories-page #vendors-by-category tr.links p.vendor-link a:visited {
+          color: white; }
+    .vendor-categories-page #vendors-by-category tr.links p.full-review {
+      margin: 0; }
+      .vendor-categories-page #vendors-by-category tr.links p.full-review a:link, .vendor-categories-page #vendors-by-category tr.links p.full-review a:visited {
+        color: #0271d8;
+        text-decoration: underline; }
+  .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column {
+    zoom: 1; }
+    .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column:before, .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column:after {
+      content: "";
+      display: table; }
+    .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column:after {
+      clear: both; }
+    .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column .cell-wrapper {
+      float: right;
+      padding-right: 0; }
+    .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column a.collapse-expand-link {
+      position: relative;
+      left: 1px;
+      top: -1px;
+      display: block;
+      width: 100%;
+      padding: 5px 5px 5px 20px;
+      background: #e2e2e2;
+      -webkit-border-radius: 8px 0 0 8px;
+      -moz-border-radius: 8px 0 0 8px;
+      border-radius: 8px 0 0 8px;
+      text-align: left; }
+      .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column a.collapse-expand-link:link, .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column a.collapse-expand-link:visited {
+        color: #113a60; }
+      .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column a.collapse-expand-link:hover, .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column a.collapse-expand-link:active {
+        text-decoration: none; }
+      .vendor-categories-page #vendors-by-category tr.collapsible-button-row td.key-column a.collapse-expand-link .plus-minus {
+        position: absolute;
+        left: 8px;
+        top: -1px;
+        font-size: 19px; }
+  .vendor-categories-page #vendors-by-category tr.collapsible.bottom-line {
+    display: table-row; }
+    .vendor-categories-page #vendors-by-category tr.collapsible.bottom-line td {
+      border-top: none; }
+      .vendor-categories-page #vendors-by-category tr.collapsible.bottom-line td .cell-wrapper {
+        padding-top: 0;
+        position: relative;
+        top: -10px; }
+  .vendor-categories-page #vendors-by-category tr.spec-row td.vendor-column {
+    border-top-color: #eeeeee; }
+  .vendor-categories-page #vendors-by-category tr.spec-row.first-cat-spec-row td {
+    /*border-top: none;*/ }
+    .vendor-categories-page #vendors-by-category tr.spec-row.first-cat-spec-row td .cell-wrapper {
+      /*padding-top: 0;*/ }
+  .vendor-categories-page #vendors-by-category tr.spec-row.pen-ult-spec td.vendor-column {
+    background: linear-gradient(bottom, #d6d6d6, #e2e2e2);
+    background: -webkit-linear-gradient(bottom, #d6d6d6, #e2e2e2);
+    background: -moz-linear-gradient(bottom, #d6d6d6, #e2e2e2); }
+  .vendor-categories-page #vendors-by-category tr.spec-row.last-spec td.vendor-column {
+    background: linear-gradient(bottom, #c3c3c3, #d6d6d6);
+    background: -webkit-linear-gradient(bottom, #c3c3c3, #d6d6d6);
+    background: -moz-linear-gradient(bottom, #c3c3c3, #d6d6d6); }

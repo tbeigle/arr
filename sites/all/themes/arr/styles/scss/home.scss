@@ -1,0 +1,209 @@
+@import "mixins";
+
+.front {
+  #messages-wrapper,
+  #messages-wrapper > .columns,
+  #page-main,
+  #page-main > .columns {
+    background: none;
+  }
+  #page-main {
+    padding: {
+      right: 0;
+      left: 0;
+    }
+    
+    background: {
+      @include home-wavy-lines;
+    }
+    
+    &> .columns {
+      padding: {
+        top: 20px;
+        bottom: 20px;
+      }
+    }
+    
+    #content {
+      padding: {
+        left: 0;
+      }
+      
+      .node-full {
+        &> .content {
+          padding: {
+            top: 0;
+          }
+        }
+      }
+    }
+    
+    #content-top {
+      .vendor-top {
+      }
+      
+      h1 {
+        margin: 0;
+      }
+    }
+  }
+  
+  #content-bottom {
+    width: 100%;
+    background: $col-bg-front-pm;
+    
+    border: {
+      top: 1px solid $col-ven-top;
+    }
+    
+    &> .columns {
+      width: 100%;
+      max-width: 920px;
+      
+      padding: {
+        top: 16px;
+        bottom: 30px;
+      }
+      
+      margin: {
+        right: auto;
+        left: auto;
+      }
+      
+      .block {        
+        h2 {
+          margin: {
+            bottom: 6px;
+          }
+        }
+        
+        &.front-vendors {
+          position: relative;
+          left: -8.913%;
+          float: left;
+          /*width: 60.784%;*/
+          width: 69.697%;
+          max-width: 702px;
+          height: 80px;
+          
+          padding: {
+            left: 8.913%;
+          }
+          
+          margin: {
+            right: -8.913%;
+          }
+          
+          overflow: hidden;
+          
+          ul.front-vendors-slider {
+            position: absolute;
+            left: 14.669%;
+            top: 30px;
+            width: auto;
+            height: 50px;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            
+            li {
+              position: relative;
+              list-style: none;
+              float: left;
+              width: auto;
+              
+              margin: {
+                left: 40px;
+              }
+              
+              vertical-align: middle;
+              
+              &:first-child {
+                margin: {
+                  left: 0;
+                }
+              }
+            }
+          }
+          
+          .overlay {
+            position: absolute;
+            top: 0;
+            width: 13.226%;
+            max-width: 82px;
+            height: 103px;
+            pointer-events: none;
+            
+            &.left {
+              left: 0;
+              background: {
+                @include front-vendors-overlay-left;
+                repeat: no-repeat;
+                position: right top;
+              }              
+            }
+            
+            &.right {
+              right: 0;
+              background: {
+                @include front-vendors-overlay-right;
+                repeat: no-repeat;
+                position: left top;
+              }
+            }
+          }
+        }
+        
+        &.popular-categories {
+          float: right;
+          width: 27.941%;
+          max-width: 285px;
+          
+          .content {
+            ul {
+              @include clear-fix;
+              
+              padding: 0;
+              margin: 0;
+              
+              li {
+                list-style: none;
+                float: left;
+                clear: left;
+                padding: 0;
+                
+                margin: {
+                  top: 5px;
+                  right: 0;
+                  bottom: 0;
+                  left: 0;
+                }
+                
+                &.odd {
+                  float: right;
+                  clear: right;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  #page-bottom {}
+}
+
+.js .front {
+  #content-bottom {
+    &> .columns {
+      .block {        
+        &.front-vendors {          
+          ul.front-vendors-slider {
+            visibility: hidden;
+          }
+        }
+      }
+    }
+  }
+}

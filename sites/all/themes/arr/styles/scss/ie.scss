@@ -1,0 +1,11 @@
+@import "mixins";
+
+.ie7 #page-top {
+  height: $h-ptop;
+}
+.lte8 .lte8-label-show label {
+  display: block;
+}
+.lte9 .front #content-bottom > .columns .block.front-vendors .overlay {
+  display: none;
+}
