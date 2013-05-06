@@ -8,3 +8,7 @@ sites/*/private
 # Ignore SVN paths
 .svn
 */.svn
+
+# Ignore the sandbox dev site directory
+sandbox
+sandbox/*
