@@ -9,8 +9,8 @@ function arr_site_edit_node_tech_specs($form, &$form_state) {
   
   $tids = array();
   
-  if (!empty($node->field_vendor_categories['und'])) {
-    foreach ($node->field_vendor_categories['und'] as $key => $data) {
+  if (!empty($node->field_vendor_categories[LANGUAGE_NONE])) {
+    foreach ($node->field_vendor_categories[LANGUAGE_NONE] as $key => $data) {
       if (!empty($data['tid'])) {
         $tids[] = $data['tid'];
       }
@@ -52,6 +52,9 @@ function arr_site_edit_node_tech_specs($form, &$form_state) {
   $results = db_query($sql);
   
   while ($row = $results->fetchObject()) {
+    if (!isset($row->tid)) continue;
+    if (!in_array($row->tid, $tids)) continue;
+    
     if (!isset($groups[$row->tid])) {
       $groups[$row->tid] = array(
         'term' => $row->ven_cat,

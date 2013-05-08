@@ -526,10 +526,9 @@ function arr_site_preprocess_node(&$vars) {
   $vars['node_spec_data'] = $node_spec_data = arr_site_fetch_tech_specs_for_node($vars['node']);
   
   extract($node_spec_data);
+  if (empty($groups)) return;
   
-  if (!empty($groups)) {
-    $group = array_pop($groups);
-    
+  foreach ($groups as $group) {
     if (empty($group['rows'])) return;
     
     foreach ($group['rows'] as $cat_id => $data) {
@@ -598,9 +597,9 @@ function arr_site_preprocess_node(&$vars) {
         }
       }
     }
-    
-    $vars['tech_specs'] = $tech_specs;
   }
+  
+  $vars['tech_specs'] = $tech_specs;
 }
 
 /**
@@ -691,6 +690,16 @@ function arr_site_fetch_tech_specs_for_node($node) {
     return FALSE;
   }
   
+  $tids = array();
+  
+  if (!empty($node->field_vendor_categories[LANGUAGE_NONE])) {
+    foreach ($node->field_vendor_categories[LANGUAGE_NONE] as $key => $data) {
+      if (!empty($data['tid'])) {
+        $tids[] = $data['tid'];
+      }
+    }
+  }
+  
   $output['specs'] = array();
   
   $sql =
@@ -722,6 +731,7 @@ function arr_site_fetch_tech_specs_for_node($node) {
         'ON s.`spec_cat_id` = c.`spec_cat_id` '.
       'LEFT JOIN {taxonomy_term_data} t '.
         'ON c.`tid` = t.`tid` '.
+    'WHERE c.`tid` IN (' . implode(',', $tids) . ') '.
     'ORDER BY t.`weight`, t.`name`, c.`weight`, c.`spec_category`, s.`weight`, s.`spec`;';
   $results = db_query($sql);
   
