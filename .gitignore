@@ -12,3 +12,7 @@ sites/*/private
 # Ignore the sandbox dev site directory
 sandbox
 sandbox/*
+
+# Ignore SASS cache
+.sass-cache
+*/.sass-cache
