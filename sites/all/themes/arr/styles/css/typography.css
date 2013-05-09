@@ -126,8 +126,8 @@ body {
   font-weight: normal;
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.545;
-  color: #696969; }
+  line-height: 1.5454;
+  color: dimgrey; }
 
 #nav ul li {
   font-weight: normal;
@@ -279,7 +279,7 @@ a.contact-vendor-button {
 /**
  * Slideshow
  */
-html .field-collection-container .field-name-field-slides .field-collection-item-field-slides .field-name-field-slide .field-items .field-item .left .inner h2 {
+html .field-collection-container .field-name-field-slides .field-collection-item-field-slides .left .inner h2 {
   text-align: center;
   font-weight: normal;
   font-size: 124px;
@@ -317,12 +317,12 @@ html .field-collection-container .field-name-field-slides .field-collection-item
  * Popups
  */
 #popups {
-  line-height: 1.545;
+  line-height: 1.5454;
   text-transform: none;
   font-weight: normal;
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
-  color: #696969; }
+  color: dimgrey; }
   #popups h2 {
     font-weight: normal;
     font-size: 17px;
@@ -350,8 +350,8 @@ html .field-collection-container .field-name-field-slides .field-collection-item
   font-weight: normal;
   font-size: 12px;
   font-family: lusitanabold, serif;
-  line-height: 2.417;
-  color: #696969;
+  line-height: 2.4166;
+  color: dimgrey;
   text-transform: uppercase; }
   .front #messages-wrapper,
   .front #messages-wrapper > .columns,

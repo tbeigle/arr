@@ -17,6 +17,9 @@
   padding: 0;
   margin: 0;
 }
+.field-collection-view {
+  border: none;
+}
 
 /**
  * Basic stuffs
@@ -709,79 +712,91 @@ html {
     }
     
     .field-name-field-slides {
-      .field-collection-item-field-slides {
+      .field-item {
+        display: none;
+        
+        &:first-child {
+          display: block;
+        }
+        
+        @include clear-fix;
+        
         position: relative;
+        
+        .left {
+          position: relative;
+          /*width: auto;*/
+          width: 42%;
+          height: 284px;
+          
+          padding: {
+            top: 51px;
+          }
+          
+          margin: {
+            right: -16px;
+          }
+          
+          background: {
+            @include home-starburst;
+            position: center center;
+            repeat: no-repeat;
+            size: 74.607%;
+          }
+          
+          .inner {
+            background: {
+              @include shadow-text-front;
+            }
+            
+            @include shadow-box-front;
+            
+            h2 {
+              max-width: 380px;
+            }
+          }
+        }
+        
+        .right {
+          width: 54.9%;
+          @include shadow-box-front;
+          
+          margin: {
+            top: 45px;
+          }
+          
+          p {
+            padding: {
+              top: 1em;
+            }
+            
+            margin: 0;
+            
+            background: {
+              @include shadow-text-front;
+            }
+            
+            &:first-child {
+              padding: {
+                top: 0;
+              }
+            }
+          }
+          
+          p {
+            padding: 0;
+            margin: 0;
+          }
+        }
         
         .field-name-field-slide {
           .field-items {
             .field-item {
-              display: none;
-              
-              &:first-child {
-                display: block;
-              }
-              
-              @include clear-fix;
               
               .left {
-                position: relative;
-                /*width: auto;*/
-                width: 42%;
-                height: 284px;
-                
-                padding: {
-                  top: 51px;
-                }
-                
-                margin: {
-                  right: -16px;
-                }
-                
-                background: {
-                  @include home-starburst;
-                  position: center center;
-                  repeat: no-repeat;
-                  size: 74.607%;
-                }
-                
-                .inner {
-                  background: {
-                    @include shadow-text-front;
-                  }
-                  
-                  @include shadow-box-front;
-                  
-                  h2 {
-                    max-width: 380px;
-                  }
-                }
               }
               
               .right {
-                width: 54.9%;
-                @include shadow-box-front;
-                
-                margin: {
-                  top: 45px;
-                }
-                
-                p {
-                  padding: {
-                    top: 1em;
-                  }
-                  
-                  margin: 0;
-                  
-                  background: {
-                    @include shadow-text-front;
-                  }
-                  
-                  &:first-child {
-                    padding: {
-                      top: 0;
-                    }
-                  }
-                }
               }            
             }
           }

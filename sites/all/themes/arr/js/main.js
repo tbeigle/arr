@@ -139,7 +139,7 @@
      * Field collection slideshow
      */
     var slide_count = 0,
-        slides_sel = '.field-name-field-slides .field-name-field-slide > .field-items > .field-item',
+        slides_sel = '.field-name-field-slides > .field-items > .field-item',
         slides_fade_time = 250,
         slide_arrows = {
           both: 'slide-arrows',

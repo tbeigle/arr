@@ -440,26 +440,20 @@ html {
   .field-collection-container {
     .field-name-field-slides {
       .field-collection-item-field-slides {
-        .field-name-field-slide {
-          .field-items {
-            .field-item {
-              .left {
-                .inner {
-                  h2 {        
-                    text-align: center;
-                    
-                    font: {
-                      weight: normal;
-                      size: 124px;
-                      family: $family-bee-3;
-                    }
-                    
-                    line-height: 0.75;
-                    
-                    @include font-upper;
-                  }
-                }
+        .left {
+          .inner {
+            h2 {        
+              text-align: center;
+              
+              font: {
+                weight: normal;
+                size: 124px;
+                family: $family-bee-3;
               }
+              
+              line-height: 0.75;
+              
+              @include font-upper;
             }
           }
         }
