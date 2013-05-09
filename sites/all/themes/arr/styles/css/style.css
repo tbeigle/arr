@@ -508,15 +508,10 @@ html .field-collection-container {
       box-shadow: 0 0 38px 16px rgba(0, 0, 0, 0.5);
       margin-top: 45px; }
       html .field-collection-container .field-name-field-slides .field-item .right p {
-        padding-top: 1em;
+        padding: 0;
         margin: 0;
         background-color: black;
         background-color: rgba(0, 0, 0, 0.5); }
-        html .field-collection-container .field-name-field-slides .field-item .right p:first-child {
-          padding-top: 0; }
-      html .field-collection-container .field-name-field-slides .field-item .right p {
-        padding: 0;
-        margin: 0; }
 html.js .field-collection-container .field-name-field-slides {
   opacity: 0; }
 
