@@ -2,6 +2,7 @@ name = Vendors
 description = Packaged contents to manage ARR vendors.
 core = 7.x
 package = Features
+php = 5.2.4
 dependencies[] = arr_site
 dependencies[] = context
 dependencies[] = ctools
