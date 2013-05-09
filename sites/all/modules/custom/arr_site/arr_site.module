@@ -846,3 +846,57 @@ function arr_site_fetch_tech_specs_by_tid($tid) {
   
   return $groups;
 }
+
+/**
+ * Implements hook_field_formatter_info()
+ */
+function arr_site_field_formatter_info() {
+  return array(
+    'arr_site_home_slide_title' => array(
+      'label' => t('Slide Title'),
+      'field types' => array('text'),
+      'description' => t('Renders the field as a title for a slide in the homepage slideshow.'),
+    ),
+    'arr_site_home_slide_content' => array(
+      'label' => t('Slide Content'),
+      'field types' => array('text', 'text_with_summary', 'text_long'),
+      'description' => t('Renders the field for display as the main content of a slide in the homepage slideshow.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function arr_site_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array(); // Initialize the var
+  
+  switch ($display['type']) {
+    case 'arr_site_home_slide_title': {
+      foreach ($items as $delta => $item) {
+        $title = !empty($item['safe_value']) ? $item['safe_value'] : $item['value'];
+        $element[$delta] = array(
+          '#markup' => $title,
+          '#prefix' => '<div class="left"><div class="inner"><h2>',
+          '#suffix' => '</h2></div></div>',
+        );
+      }
+      
+      break;
+    }
+    
+    case 'arr_site_home_slide_content': {
+      foreach ($items as $delta => $item) {
+        $content = !empty($item['safe_value']) ? $item['safe_value'] : $item['value'];
+        $element[$delta] = array(
+          '#markup' => $content,
+          '#prefix' => '<div class="right">',
+          '#suffix' => '</div>',
+        );
+      }
+      break;
+    }
+  }
+  
+  return $element;
+}
