@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Vendors feature.
- */
-
-include_once 'arr_vendors.features.inc';

@@ -1,0 +1,295 @@
+<?php
+/**
+ * @file
+ * Code for the Vendors feature.
+ */
+
+include_once 'arr_vendors.features.inc';
+
+/**
+ * Implements hook_init()
+ */
+function arr_vendors_init() {
+  $mod_path = drupal_get_path('module', 'arr_vendors');
+  
+  if (drupal_is_front_page()) {
+    $options = array(
+      'every_page' => FALSE,
+      'preprocess' => FALSE,
+      'scope' => 'footer',
+      'weight' => 1000,
+    );
+    
+    drupal_add_js($mod_path.'/js/front-vendors.js', $options);
+  }
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function arr_vendors_block_info() {
+  $blocks = array();
+  
+  $blocks['front_vendors'] = array(
+    'info' => t('Front Vendors Block'),
+  );
+  
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure()
+ */
+function arr_vendors_block_configure($delta = '') {
+  $form = array();
+  
+  switch ($delta) {
+    case 'front_vendors': {
+      $vendor_data = _arr_vendors_get_vendors(TRUE);
+      
+      $form['arr_fv'] = array(
+        '#type' => 'fieldset',
+        '#tree' => TRUE,
+        '#title' => t('Vendors'),
+      );
+      
+      foreach ($vendor_data as $vendor_group => $vendors) {
+        $group_desc = ucwords($vendor_group) . ' ' . (($vendor_group == 'included') ? 'in ' : 'from ') . 'the Slideshow';
+        $desc = t('Vendors Currently !group_desc', array('!group_desc' => $group_desc));
+        
+        $form['arr_fv'][$vendor_group] = array(
+          '#tree' => TRUE,
+          '#prefix' =>
+            '<h4 class="included-excluded-desc ' . $vendor_group . '">' . $desc . '</h4>' .
+            '<table class="arr-fv-container ' . $vendor_group . '">' .
+              '<thead>' .
+                '<tr>' .
+                  '<th>' . t('Vendor Name') . '</th>' .
+                  '<th>' . t('Include in Slideshow') . '</th>' .
+                  '<th>' . t('Weight') . '</th>' .
+                '</tr>' .
+              '<thead>' .
+              '<tbody>',
+          '#suffix' =>
+              '</tbody>' .
+            '</table>',
+        );
+        
+        foreach ($vendors as $vendor) {
+          $default_promote = !empty($vendor->promote) ? $vendor->promote : 0;
+          $default_weight = !empty($vendor->field_vendor_weight_value) ? $vendor->field_vendor_weight_value : 0;
+          
+          $weight_options = array();
+          
+          for ($i = -50; $i <= 50; $i++) {
+            $weight_options[$i] = $i;
+          }
+          
+          $form['arr_fv'][$vendor_group][$vendor->nid] = array(
+            '#tree' => TRUE,
+            '#prefix' => '<tr>',
+            '#suffix' => '</tr>',
+          );
+          
+          $form['arr_fv'][$vendor_group][$vendor->nid]['vendor_name'] = array(
+            '#markup' => $vendor->title,
+            '#prefix' => '<td class="vendor-title">',
+            '#suffix' => '</td>',
+          );
+          
+          $form['arr_fv'][$vendor_group][$vendor->nid]['promote'] = array(
+            '#type' => 'checkbox',
+            '#title' => 'Promote',
+            '#title_display' => 'invisible',
+            '#default_value' => $default_promote,
+            '#prefix' => '<td class="vendor-promote">',
+            '#suffix' => '</td>',
+          );
+          
+          $form['arr_fv'][$vendor_group][$vendor->nid]['field_vendor_weight_value'] = array(
+            '#type' => 'select',
+            '#title' => 'Weight',
+            '#title_display' => 'invisible',
+            '#default_value' => $default_weight,
+            '#options' => $weight_options,
+            '#prefix' => '<td class="vendor-weight">',
+            '#suffix' => '</td>',
+          );
+          
+          $form['arr_fv'][$vendor_group][$vendor->nid]['original_weight'] = array(
+            '#type' => 'hidden',
+            '#value' => $default_weight,
+          );
+        }
+      }
+      
+      break;
+    }
+  }
+  
+  return $form;
+}
+
+/**
+ * Implements hook_block_save()
+ */
+function arr_vendors_block_save($delta = '', $edit = array()) {
+  if (empty($edit['arr_fv'])) return;
+  
+  foreach ($edit['arr_fv'] as $group => $vendors) {
+    $is_included_group = ($group == 'included');
+    
+    foreach ($vendors as $nid => $data) {
+      $promote = !empty($data['promote']) ? $data['promote'] : 0;
+      $weight = !empty($data['field_vendor_weight_value']) ? $data['field_vendor_weight_value'] : 0;
+      $original_weight = !empty($data['original_weight']) ? $data['original_weight'] : 0;
+      
+      if (($is_included_group && $promote == 1 && $weight == $original_weight) || (!$is_included_group && $promote != 1)) continue;
+      
+      $node = node_load($nid);
+      $node->promote = $promote;
+      
+      $node->field_vendor_weight = array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $data['field_vendor_weight_value'],
+          ),
+        ),
+      );
+      
+      node_save($node);
+    }
+  }
+  
+  $front_vendors = _arr_vendors_get_vendors();
+  variable_set('arr_vendors_front_vendors', $front_vendors);
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function arr_vendors_block_view($delta = '') {
+  $block = array(
+    'subject' => NULL,
+    'content' => array(),
+  );
+  
+  switch ($delta) {
+    case 'front_vendors': {
+      $block['subject'] = $block['content'] = '';
+      $front_vendors = variable_get('arr_vendors_front_vendors', '');
+      
+      if (empty($front_vendors) || !is_array($front_vendors)) return $block;
+      
+      $block['subject'] = t('New Vendors');
+      $block['content'] = '<ul class="front-vendors-slider">'."\n";
+      
+      foreach ($front_vendors as $v) {
+        if (!empty($v->uri)) $logo = image_style_url('front_vendors', $v->uri);
+        
+        if (!empty($logo)) {
+          $url = url('node/'.$v->nid);
+          
+          $attr = array(
+            'class' => 'vendor-logo',
+            'src' => $logo,
+            'alt' => $v->title,
+          );
+          
+          $img = '<img'.drupal_attributes($attr).'>';
+
+          $block['content'] .= '<li class="img-wrapper"><a class="front-vendor" href="'.$url.'">'.$img.'</a></li>'."\n";
+        }
+        
+      }
+      
+      $block['content'] .= '</ul>';
+      
+      break;
+    }
+  }
+  
+  return $block;
+}
+
+/**
+ * Gets the front vendors
+ */
+function _arr_vendors_get_vendors($edit = FALSE) {
+  global $_arr_site;
+  if (empty($_arr_site['vendor_type'])) return array();
+  
+  $output = $query = array();
+  
+  if ($edit) {
+    $output = array(
+      'included' => array(),
+      'excluded' => array(),
+    );
+  }
+  
+  $query['select'] =
+    'SELECT '.
+      'n.`nid` AS `nid`, ' .
+      'n.`title` AS `title`, ' .
+      'w.`field_vendor_weight_value` AS `field_vendor_weight_value`';
+  
+  $query['from'] =
+    'FROM {node} n ' .
+      'LEFT JOIN {field_data_field_vendor_weight} w ' .
+        'ON n.`nid` = w.`entity_id` ' .
+          'AND w.`entity_type` = :entity_type ' .
+          'AND w.`bundle` = n.`type`';
+  
+  $query['where'] =
+    'WHERE n.`type` = :type ' .
+      'AND n.`status` = :status';
+  
+  $query['order_by'] =
+    'ORDER BY n.`status` DESC, n.`type` DESC, n.`promote` DESC, w.`field_vendor_weight_value` ASC, n.`created` DESC, n.`changed` DESC';
+    
+  $vars = array(
+    ':entity_type' => 'node',
+    ':type' => $_arr_site['vendor_type'],
+    ':status' => 1,
+  );
+  
+  // If we're loading the vendors for display purposes ...
+  if (!$edit) {
+    $query['select'] .= ', fm.`uri` AS `uri`';
+    
+    $query['from'] .=
+      ' LEFT JOIN {field_data_field_logo} l ' .
+        'ON n.`nid` = l.`entity_id` ' .
+          'AND l.`entity_type` = :entity_type ' .
+          'AND l.`bundle` = n.`type` ' .
+      'LEFT JOIN {file_managed} fm ' .
+        'ON l.`field_logo_fid` = fm.`fid`';
+    
+    $query['where'] .=
+      ' AND n.`promote` = :promote';
+    
+    $vars[':promote'] = 1;
+  }
+  // If we are editing ...
+  else {
+    $query['select'] .= ', n.`promote` AS `promote`';
+  }
+  
+  $sql = implode(' ', $query) . ';';
+  $results = db_query($sql, $vars);
+  
+  foreach ($results as $row) {
+    if ($edit) {
+      if (!empty($row->promote)) {
+        $output['included'][] = $row;
+      } else {
+        $output['excluded'][] = $row;
+      }
+    } else {
+      $output[] = $row;
+    }
+  }
+  
+  return $output;
+}
