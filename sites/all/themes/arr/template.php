@@ -154,8 +154,10 @@ function arr_preprocess_page(&$vars) {
       $vendor_categories['#theme'] = 'tax_title_prefix';
       $vars['vendor_category'] = render($vendor_categories);
       
+      $field_teaser = field_view_field('node', $node, 'field_description_teaser', 'default');
       $field_description = field_view_field('node', $node, 'field_description', 'default');
-      $vars['description'] = render($field_description);
+      $vars['description_teaser'] = !empty($field_teaser) ? $field_teaser : NULL;
+      $vars['description'] = !empty($field_description) ? $field_description : NULL;
     }
   }
   

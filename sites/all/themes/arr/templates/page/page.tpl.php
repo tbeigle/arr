@@ -110,10 +110,10 @@
     
     <div class="columns clearfix">
       <div class="column left"<?php print $schema_main_content; ?>>
-        <?php if ((!$is_front && $title) || !empty($description) || $page['content_top']): ?>
+        <?php if ((!$is_front && $title) || !empty($description) || !empty($description_teaser) || $page['content_top']): ?>
           <div id="content-top" class="row clearfix">
             <div class="column left">
-              <?php if (!$is_front) { ?>
+              <?php if (!$is_front): ?>
                 <?php if ($breadcrumb): ?>
                   <?php print $breadcrumb; ?>
                 <?php endif; ?>
@@ -126,15 +126,26 @@
                   <?php //} ?>
                   <?php print $title; ?>
                 </h1>
-              <?php } ?>
+              <?php endif; ?>
               
-              <?php if (!empty($description)) { ?>
-                <div id="description-wrapper" class="description reveal"<?php print $schema_vendor_desc; ?>>
-                  <?php print $description; ?>
+              <?php if (!empty($description)): ?>
+                <div id="description-wrapper" class="description">
+                  <?php if (!empty($description_teaser)): ?>
+                    <div class="description description-teaser">
+                      <?php print render($description_teaser); ?>
+                    </div>
+                    <!-- /.description /.description-teaser -->
+                  <?php endif; ?>
+                  
+                  <div class="reveal"<?php print $schema_vendor_desc; ?>>
+                    <?php print render($description); ?>
+                  </div>
+                  <!-- /#description-wrapper /.description /.reveal -->
                 </div>
-                <!-- /#description-wrapper /.description /.reveal -->
+                <!-- /#description-wrapper /.description -->
+                
                 <a class="toggle-description right" href="#description-wrapper"><span>Expand</span> Description</a>
-              <?php } ?>
+              <?php endif; ?>
             </div>
             <!-- /.column /.left -->
             
