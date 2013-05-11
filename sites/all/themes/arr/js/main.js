@@ -18,41 +18,22 @@
       var $t = $(this),
           $sp = $t.find('span'),
           $targ = $($t.attr('href')),
-          $hid_con = $targ.children();
-      
-      $targ
-      .attr(exp_col_tags.col, $targ.outerHeight(true) + 'px');    
+          $hid_con = $targ.find('.reveal');
       
       $t.bind('click', function() {
-        var exp_height = 0,
-            data_exp_height = $targ.attr(exp_col_tags.exp),
-            new_height = 0,
-            new_text = '',
+        var new_text = '',
             is_expanded = ($t.hasClass(exp_class) && $targ.hasClass(exp_class));
         
-        if (typeof data_exp_height != 'undefined') {
-          exp_height = data_exp_height;
-        } else {
-          $targ.children().each(function() {
-            exp_height += $(this).outerHeight();
-          });
+        $hid_con.slideToggle(exp_col_speed, function() {
+          if (is_expanded) {
+            new_height = $targ.attr(exp_col_tags.col);
+            new_text = 'Expand';
+            
+            $('html, body').animate({scrollTop: $('#page-top').offset().top}, exp_col_speed);
+          } else {
+            new_text = 'Collapse';
+          }
           
-          exp_height += 'px';
-          
-          $targ.attr(exp_col_tags.exp, exp_height);
-        }
-        
-        if (is_expanded) {
-          new_height = $targ.attr(exp_col_tags.col);
-          new_text = 'Expand';
-          
-          $('html, body').animate({scrollTop: $('#page-top').offset().top}, exp_col_speed);
-        } else {
-          new_height = $targ.attr(exp_col_tags.exp);
-          new_text = 'Collapse';
-        }
-        
-        $targ.animate({'height': new_height}, exp_col_speed, function() {
           $t.toggleClass(exp_class);
           $targ.toggleClass(exp_class);
           $sp.text(new_text);

@@ -100,16 +100,8 @@ button,
 .reveal {
   overflow: hidden;
 }
-.js .description {
-  height: auto;
-  
-  &.reveal {
-    height: 78px;
-    
-    &.expanded {
-      height: auto;
-    }
-  }
+.js .description .reveal {
+  display: none;
 }
 .hide-me {
   display: none;
