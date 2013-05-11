@@ -43,38 +43,6 @@ function arr_site_init() {
     }
   }
   
-  if (drupal_is_front_page()) {
-    $options = array(
-      'every_page' => FALSE,
-      'preprocess' => FALSE,
-      'scope' => 'footer',
-      'weight' => 1000,
-    );
-    drupal_add_js($mod_path.'/js/front-vendors.js', $options);
-  }
-  
-  if ($_GET['q'] == 'admin/content') {
-    $sql =
-      'SELECT '.
-        '`nid`, '.
-        '`title` '.
-      'FROM {node} n '.
-      'WHERE `type` = :type '.
-        'AND `promote` = :promote '.
-        'AND `status` = :status '.
-      'ORDER BY `type`, `promote` DESC, `status` DESC;';
-    $results = db_query($sql, array(':type' => $vendor_type, ':promote' => 1, ':status' => 1));
-    //$results = db_query($sql, array(':type' => $vendor_type, ':status' => 1));
-    
-    $front_vendors = array();
-    
-    foreach ($results as $row) {
-      $front_vendors[] = $row;
-    }
-    
-    variable_set('arr_site_front_vendors', $front_vendors);
-  }
-  
   if (arg(0) == 'taxonomy' && arg(1) == 'term') {
     if ($tid = arg(2)) {
       $sql =
@@ -397,10 +365,6 @@ BLOCKS
 function arr_site_block_info() {
   $blocks = array();
   
-  $blocks['front_vendors'] = array(
-    'info' => t('Front Vendors Block'),
-  );
-  
   $blocks['related_categories'] = array(
     'info' => t('Related Categories Block'),
   );
@@ -415,9 +379,6 @@ function arr_site_block_configure($delta = '') {
   $form = array();
   
   switch ($delta) {
-    case 'front_vendors': {
-      break;
-    }
     case 'related_categories': {
       break;
     }
@@ -442,41 +403,6 @@ function arr_site_block_view($delta = '') {
   );
   
   switch ($delta) {
-    case 'front_vendors': {
-      $block['subject'] = $block['content'] = '';
-      $front_vendors = variable_get('arr_site_front_vendors', '');
-      
-      if (!empty($front_vendors) && is_array($front_vendors)) {
-        $block['subject'] = t('New Vendors');
-        $block['content'] = '<ul class="front-vendors-slider">'."\n";
-        
-        foreach ($front_vendors as $v) {
-          if (!empty($v->nid)) {
-            $n = node_load($v->nid);
-          }
-          
-          $uri = !empty($n->field_logo[LANGUAGE_NONE][0]['uri']) ? $n->field_logo[LANGUAGE_NONE][0]['uri'] : '';
-          
-          if (!empty($uri)) $logo = image_style_url('front_vendors', $uri);
-          
-          if (!empty($logo)) {
-            $url = url('node/'.$v->nid);
-            $attr = array(
-              'class' => 'vendor-logo',
-              'src' => $logo,
-              'alt' => $n->title,
-            );
-            $img = '<img'.drupal_attributes($attr).'>';
-
-            $block['content'] .= '<li class="img-wrapper"><a class="front-vendor" href="'.$url.'">'.$img.'</a></li>'."\n";
-          }
-          
-        }
-        
-        $block['content'] .= '</ul>';
-      }
-      break;
-    }
     case 'related_categories': {
       $block['subject'] = 'Related Categories';
       $block['content'] = 'testing';
