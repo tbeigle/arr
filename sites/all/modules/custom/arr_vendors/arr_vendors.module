@@ -152,25 +152,27 @@ function arr_vendors_block_save($delta = '', $edit = array()) {
   foreach ($edit['arr_fv'] as $group => $vendors) {
     $is_included_group = ($group == 'included');
     
-    foreach ($vendors as $nid => $data) {
-      $promote = !empty($data['promote']) ? $data['promote'] : 0;
-      $weight = !empty($data['field_vendor_weight_value']) ? $data['field_vendor_weight_value'] : 0;
-      $original_weight = !empty($data['original_weight']) ? $data['original_weight'] : 0;
-      
-      if (($is_included_group && $promote == 1 && $weight == $original_weight) || (!$is_included_group && $promote != 1)) continue;
-      
-      $node = node_load($nid);
-      $node->promote = $promote;
-      
-      $node->field_vendor_weight = array(
-        LANGUAGE_NONE => array(
-          0 => array(
-            'value' => $data['field_vendor_weight_value'],
+    if (is_array($vendors)) {
+      foreach ($vendors as $nid => $data) {
+        $promote = !empty($data['promote']) ? $data['promote'] : 0;
+        $weight = !empty($data['field_vendor_weight_value']) ? $data['field_vendor_weight_value'] : 0;
+        $original_weight = !empty($data['original_weight']) ? $data['original_weight'] : 0;
+        
+        if (($is_included_group && $promote == 1 && $weight == $original_weight) || (!$is_included_group && $promote != 1)) continue;
+        
+        $node = node_load($nid);
+        $node->promote = $promote;
+        
+        $node->field_vendor_weight = array(
+          LANGUAGE_NONE => array(
+            0 => array(
+              'value' => $data['field_vendor_weight_value'],
+            ),
           ),
-        ),
-      );
-      
-      node_save($node);
+        );
+        
+        node_save($node);
+      }
     }
   }
   
