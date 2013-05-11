@@ -46,11 +46,24 @@ function arr_vendors_block_configure($delta = '') {
   switch ($delta) {
     case 'front_vendors': {
       $vendor_data = _arr_vendors_get_vendors(TRUE);
+      $max_slides = variable_get('arr_vendors_front_vendors_max_slides', 0);
+      $weight_options = array();
+      
+      for ($i = -50; $i <= 50; $i++) {
+        $weight_options[$i] = $i;
+      }
       
       $form['arr_fv'] = array(
         '#type' => 'fieldset',
         '#tree' => TRUE,
         '#title' => t('Vendors'),
+      );
+      
+      $form['arr_fv']['limit'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Maximum Number of Slides'),
+        '#default_value' => $max_slides,
+        '#description' => t('Enter a number to limit how many slides can appear in the slideshow. Enter 0 if you do not want to set a limit.'),
       );
       
       foreach ($vendor_data as $vendor_group => $vendors) {
@@ -78,12 +91,6 @@ function arr_vendors_block_configure($delta = '') {
         foreach ($vendors as $vendor) {
           $default_promote = !empty($vendor->promote) ? $vendor->promote : 0;
           $default_weight = !empty($vendor->field_vendor_weight_value) ? $vendor->field_vendor_weight_value : 0;
-          
-          $weight_options = array();
-          
-          for ($i = -50; $i <= 50; $i++) {
-            $weight_options[$i] = $i;
-          }
           
           $form['arr_fv'][$vendor_group][$vendor->nid] = array(
             '#tree' => TRUE,
@@ -135,6 +142,12 @@ function arr_vendors_block_configure($delta = '') {
  */
 function arr_vendors_block_save($delta = '', $edit = array()) {
   if (empty($edit['arr_fv'])) return;
+  
+  if (isset($edit['arr_fv']['limit'])) {
+    $limit = $edit['arr_fv']['limit'];
+    variable_set('arr_vendors_front_vendors_max_slides', $limit);
+    unset($limit);
+  }
   
   foreach ($edit['arr_fv'] as $group => $vendors) {
     $is_included_group = ($group == 'included');
@@ -256,6 +269,7 @@ function _arr_vendors_get_vendors($edit = FALSE) {
   
   // If we're loading the vendors for display purposes ...
   if (!$edit) {
+    $limit = variable_get('arr_vendors_front_vendors_max_slides', 0);
     $query['select'] .= ', fm.`uri` AS `uri`';
     
     $query['from'] .=
@@ -276,7 +290,12 @@ function _arr_vendors_get_vendors($edit = FALSE) {
     $query['select'] .= ', n.`promote` AS `promote`';
   }
   
-  $sql = implode(' ', $query) . ';';
+  $sql = implode(' ', $query);
+  
+  if (!empty($limit)) {
+    $sql .= ' LIMIT ' . $limit;
+  }
+  
   $results = db_query($sql, $vars);
   
   foreach ($results as $row) {
