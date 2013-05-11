@@ -1,0 +1,16 @@
+name = ARR Common Elements
+description = Packaged contents for miscellaneous, common elements on allravereviews.com
+core = 7.x
+package = arr
+version = 7.x-1.0
+project = arr_common_elements
+dependencies[] = arr_site
+dependencies[] = context
+dependencies[] = ctools
+dependencies[] = menu
+dependencies[] = views
+dependencies[] = webform
+features[context][] = bubble_links
+features[ctools][] = context:context:3
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
