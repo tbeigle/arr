@@ -111,6 +111,12 @@ a:link, a:visited {
 a:hover, a:focus {
   text-decoration: underline; }
 
+.node a.edit-link:link, .node a.edit-link:visited {
+  color: #ff4600; }
+
+.not-front .node a:link, .not-front .node a:visited {
+  color: #ff9000; }
+
 .img-wrapper {
   font-size: 0;
   line-height: 0; }
@@ -203,14 +209,14 @@ body {
   line-height: 1.4166;
   color: #113a60; }
 
-a.contact-vendor-button {
+.not-front .node a.contact-vendor-button {
   text-align: center;
   font-size: 54px;
   font-family: beethreeregular, "Arial Narrow", sans-serif;
   line-height: 70px;
   text-decoration: none;
   text-transform: uppercase; }
-  a.contact-vendor-button:link, a.contact-vendor-button:visited {
+  .not-front .node a.contact-vendor-button:link, .not-front .node a.contact-vendor-button:visited {
     color: white; }
 
 #comments {
