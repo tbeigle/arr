@@ -7,6 +7,21 @@
  */
 
 /**
+ * Form functions
+ */
+$dir = dirname(__FILE__) . '/includes/forms/*.form.inc';
+
+foreach (glob($dir) as $file) {
+  include_once($file);
+}
+
+/**
+ * Database call functions
+ */
+$file = dirname(__FILE__) . '/includes/arr_site_db_calls.inc';
+include_once($file);
+
+/**
  * Implementation of hook_init
  */
 function arr_site_init() {
@@ -43,23 +58,12 @@ function arr_site_init() {
     }
   }
   
-  if (arg(0) == 'taxonomy' && arg(1) == 'term') {
-    if ($tid = arg(2)) {
-      $sql =
-        'SELECT COUNT(*) '.
-        'FROM {taxonomy_term_data} '.
-        'WHERE `tid` = :tid '.
-          'AND `vid` = :vid '.
-        'ORDER BY `tid`, `vid`;';
-      $count = db_query($sql, array(':tid' => $tid, ':vid' => $vid))->fetchField();
-      
-      if (!empty($count)) {
-        $_arr_site['is_category_page'] = TRUE;
-        
-        $_arr_site['arr_site_cat_specs'] = arr_site_fetch_tech_specs_by_tid($tid);
-        $_arr_site['arr_site_node_specs'] = arr_site_fetch_node_spec_data_by_tid($tid);
-      }
-    }
+  $tid = arr_site_is_category_page($vid);
+  $_arr_site['is_category_page'] = !empty($tid);
+  
+  if ($_arr_site['is_category_page']) {
+    $_arr_site['arr_site_cat_specs'] = arr_site_fetch_tech_specs_by_tid($tid);
+    $_arr_site['arr_site_node_specs'] = arr_site_fetch_node_spec_data_by_tid($tid);
   }
 }
 
@@ -101,9 +105,27 @@ function arr_site_menu() {
     'access callback' => 'arr_site_access_tech_specs',
   );
   
-  $items['admin/structure/arr-manage-tech-specs/%/edit-category'] = array(
+  $items['admin/structure/arr-manage-tech-specs/%/edit-category/%'] = array(
     'title' => 'Edit Tech Spec Category',
     'description' => 'Edit a technical specification category.',
+    'page callback' => 'arr_site_page_manage_tech_specs',
+    'page arguments' => array(4, 3, 5),
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'arr_site_access_tech_specs',
+  );
+  
+  $items['admin/structure/arr-manage-tech-specs/%/clone-category'] = array(
+    'title' => 'Clone Tech Spec Category',
+    'description' => 'Clone a technical specification category.',
+    'page callback' => 'arr_site_page_manage_tech_specs',
+    'page arguments' => array(4, 3),
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'arr_site_access_tech_specs',
+  );
+  
+  $items['admin/structure/arr-manage-tech-specs/%/map-category'] = array(
+    'title' => 'Map Category to Terms',
+    'description' => 'Add or remove mapping between this category and vendor vocabulary terms',
     'page callback' => 'arr_site_page_manage_tech_specs',
     'page arguments' => array(4, 3),
     'type' => MENU_NORMAL_ITEM,
@@ -112,9 +134,18 @@ function arr_site_menu() {
   
   $items['admin/structure/arr-manage-tech-specs/%/delete-category'] = array(
     'title' => 'Delete Tech Spec Category',
-    'description' => 'Delete a technical specification category.',
+    'description' => 'Delete a technical specification category from all vendor types.',
     'page callback' => 'arr_site_page_manage_tech_specs',
     'page arguments' => array(4, 3),
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'arr_site_access_tech_specs',
+  );
+  
+  $items['admin/structure/arr-manage-tech-specs/%/unmap-category/%'] = array(
+    'title' => 'Unmap Tech Spec Category',
+    'description' => 'Delete a technical specification category from this vendor type.',
+    'page callback' => 'arr_site_page_manage_tech_specs',
+    'page arguments' => array(4, 3, 5),
     'type' => MENU_NORMAL_ITEM,
     'access callback' => 'arr_site_access_tech_specs',
   );
@@ -137,20 +168,29 @@ function arr_site_menu() {
     'access callback' => 'arr_site_access_tech_specs',
   );
   
-  $items['admin/structure/arr-manage-tech-specs/%/edit'] = array(
+  $items['admin/structure/arr-manage-tech-specs/%/edit/%'] = array(
     'title' => 'Edit Tech Spec',
     'description' => 'Edit a technical specification.',
     'page callback' => 'arr_site_page_manage_tech_specs',
-    'page arguments' => array(4, 3),
+    'page arguments' => array(4, 3, 5),
     'type' => MENU_NORMAL_ITEM,
     'access callback' => 'arr_site_access_tech_specs',
   );
   
   $items['admin/structure/arr-manage-tech-specs/%/delete'] = array(
     'title' => 'Delete Tech Spec',
-    'description' => 'Delete a technical specification.',
+    'description' => 'Delete a technical specification from all vendor types.',
     'page callback' => 'arr_site_page_manage_tech_specs',
     'page arguments' => array(4, 3),
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'arr_site_access_tech_specs',
+  );
+  
+  $items['admin/structure/arr-manage-tech-specs/%/unmap/%'] = array(
+    'title' => 'Unmap Tech Spec',
+    'description' => 'Delete a technical specification from this vendor type.',
+    'page callback' => 'arr_site_page_manage_tech_specs',
+    'page arguments' => array(4, 3, 5),
     'type' => MENU_NORMAL_ITEM,
     'access callback' => 'arr_site_access_tech_specs',
   );
@@ -193,18 +233,9 @@ function arr_site_views_api() {
 }
 
 /**
- * Form functions
- */
-$dir = dirname(__FILE__).'/includes/forms/*.form.inc';
-
-foreach (glob($dir) as $file) {
-  include_once($file);
-}
-
-/**
  * Page callback for the tech specs admin pages
  */
-function arr_site_page_manage_tech_specs($page = NULL, $id = 0) {
+function arr_site_page_manage_tech_specs($page = NULL, $id = 0, $vendor_tid = 0) {
   $output = array();
   
   $forms = array(
@@ -212,6 +243,9 @@ function arr_site_page_manage_tech_specs($page = NULL, $id = 0) {
     'delete-category' => 'arr_site_delete_tech_spec_category',
   );
   
+  $forms['unmap'] = $forms['delete'];
+  $forms['unmap-category'] = $forms['delete-category'];
+  $forms['clone-category'] = $forms['map-category'] = 'arr_site_clone_tech_spec_category';
   $forms['add'] = $forms['edit'] = 'arr_site_edit_tech_spec';
   $forms['add-category'] = $forms['edit-category'] = 'arr_site_edit_tech_spec_category';
   
@@ -219,7 +253,14 @@ function arr_site_page_manage_tech_specs($page = NULL, $id = 0) {
     $output = drupal_get_form('arr_site_edit_tech_spec_settings');
   } else {
     if (!empty($forms[$page])) {
-      $output = drupal_get_form($forms[$page], $id);
+      if ($page == 'map-category') {
+        $output = drupal_get_form($forms[$page], $id, 'map');
+      }
+      elseif ($page == 'clone-category') {
+        $output = drupal_get_form($forms[$page], $id, 'clone');
+      } else {
+        $output = drupal_get_form($forms[$page], $id, $vendor_tid);
+      }
     } elseif ($page == 'categories' || $page == 'specs') {
       $output = drupal_get_form('arr_site_tech_spec_lists', $page);
     }
@@ -266,46 +307,9 @@ function arr_site_access_tech_specs() {
 }
 
 /**
- * Function to fetch an individual tech spec record
- */
-function arr_site_get_tech_spec($id = 0, $all = FALSE) {
-  if ($all) {
-    $output = array();
-    
-    $sql =
-      'SELECT * '.
-      'FROM {arr_specs} '.
-      'ORDER BY `spec`;';
-    $results = db_query($sql);
-    
-    while ($row = $results->fetchObject()) {
-      $output[] = $row;
-    }
-  } elseif (!empty($id)) {
-    $sql =
-      'SELECT * '.
-      'FROM {arr_specs} '.
-      'WHERE `spec_id` = :spec_id '.
-      'ORDER BY `spec_id` LIMIT 1;';
-    $output = db_query($sql, array(':spec_id' => $id))->fetchObject();
-  } else {
-    $output = (object) array(
-      'spec_id' => '',
-      'spec_cat_id' => '',
-      'spec' => '',
-      'points_yes' => 1,
-      'points_no' => 0,
-      'weight' => 0,
-    );
-  }
-  
-  return $output;
-}
-
-/**
  * Builds table markup for category and tech spec list pages
  */
-function _arr_site_tech_spec_list_table($cols, $rows, $category = FALSE) {
+function _arr_site_tech_spec_list_table($cols, $rows, $category = FALSE, $vendor_tid = 0) {
   $col_count = count($cols);
   
   $output =
@@ -318,7 +322,7 @@ function _arr_site_tech_spec_list_table($cols, $rows, $category = FALSE) {
   }
   
   $output .=
-          '<th colspan="2">'.t('Operations').'</th>'."\n"."\t"."\t".
+          '<th colspan="3">'.t('Operations').'</th>'."\n"."\t"."\t".
         '</tr>'."\n"."\t".
       '</thead>'."\n"."\t".
       '<tbody>'."\n"."\t";
@@ -328,22 +332,26 @@ function _arr_site_tech_spec_list_table($cols, $rows, $category = FALSE) {
         "\t".
         '<tr>'."\n"."\t"."\t"."\t";
     
-    foreach ($row as $td) {
+    foreach ($row as $key => $td) {
       $output .=
           '<td>'.t("@td", array('@td' => $td)).'</td>'."\n"."\t"."\t"."\t";
     }
     
     $l_suff = ($category) ? '-category' : '';
-    $el = $dl = 'admin/structure/arr-manage-tech-specs/'.$id.'/';
-    $el .= 'edit'.$l_suff;
+    $el = $dl = $um = 'admin/structure/arr-manage-tech-specs/'.$id.'/';
+    
+    $el .= 'edit'.$l_suff.'/'.$vendor_tid;;
     $dl .= 'delete'.$l_suff;
+    $um .= 'unmap'.$l_suff.'/'.$vendor_tid;
     
     $el = l('edit', $el);
     $dl = l('delete', $dl);
+    $um = l('unmap', $um);
     
     $output .=
           '<td>'.$el.'</td>'."\n"."\t"."\t"."\t".
           '<td>'.$dl.'</td>'."\n"."\t"."\t"."\t".
+          '<td>'.$um.'</td>'."\n"."\t"."\t"."\t".
         '</tr>'."\n"."\t";
   }
   
@@ -546,231 +554,6 @@ function arr_site_webform_select_options_info() {
   );
   
   return $items;
-}
-
-/**
- * Build an options list to be used with webforms select list based in drupal roles
- */
-function arr_webform_pre_build_list_vendor_categories() {
-  global $_arr_site;
-  
-  $vid = !empty($_arr_site['vendors_vocab']) ? $_arr_site['vendors_vocab'] : 0;
-  $contentarray = array();
-  
-  $sql =
-    'SELECT `tid`, `name` '.
-    'FROM {taxonomy_term_data} '.
-    'WHERE `vid` = :vid '.
-    'ORDER BY `vid`, `name`;';
-  $results = db_query($sql, array(':vid' => $vid));
-  
-  foreach ($results as $row) {
-    $contentarray[$row->tid] = t($row->name);
-  }
-  
-  return $contentarray;
-}
-
-/**
- * Build an options list to be used with webforms select list based in drupal roles
- */
-function arr_webform_pre_build_list_vendors() {
-  global $_arr_site;
-  
-  $type = !empty($_arr_site['vendor_type']) ? $_arr_site['vendor_type'] : '';
-  $contentarray = array();
-  
-  $sql =
-    'SELECT `nid`, `title` '.
-    'FROM {node} '.
-    'WHERE `type` = :type '.
-    'ORDER BY `type`, `title`;';
-  $results = db_query($sql, array(':type' => $type));
-  
-  foreach ($results as $row) {
-    $contentarray[$row->nid] = t($row->title);
-  }
-  
-  $contentarray['other'] = 'Other';
-  
-  return $contentarray;
-}
-
-/**
- * Fetch a node's tech specs data
- */
-function arr_site_fetch_tech_specs_for_node($node) {
-  $output = array(
-    'specs' => array(),
-    'groups' => array(),
-  );
-  
-  if (is_numeric($node)) {
-    $nid = $node;
-    $node = node_load($nid);
-  } elseif (!empty($node->nid)) {
-    $nid = $node->nid;
-  }
-  
-  if (empty($nid)) {
-    return FALSE;
-  }
-  
-  $tids = array();
-  
-  if (!empty($node->field_vendor_categories[LANGUAGE_NONE])) {
-    foreach ($node->field_vendor_categories[LANGUAGE_NONE] as $key => $data) {
-      if (!empty($data['tid'])) {
-        $tids[] = $data['tid'];
-      }
-    }
-  }
-  
-  $output['specs'] = array();
-  
-  $sql =
-    'SELECT `spec_id`, `has_spec`, `spec_comment` '.
-    'FROM {arr_spec_vendors} '.
-    'WHERE `nid` = :nid '.
-    'ORDER BY `nid`;';
-  $results = db_query($sql, array(':nid' => $nid));
-  
-  while ($row = $results->fetchObject()) {
-    $output['specs'][$row->spec_id] = array(
-      'has_spec' => $row->has_spec,
-      'spec_comment' => $row->spec_comment
-    );
-  }
-  
-  $output['groups'] = array();
-  
-  $sql =
-    'SELECT '.
-      's.`spec_id` AS `spec_id`, '.
-      's.`spec` AS `spec`, '.
-      'c.`spec_cat_id` AS `spec_cat_id`, '.
-      'c.`spec_category` AS `spec_category`, '.
-      't.`tid` AS `tid`, '.
-      't.`name` AS `ven_cat` '.
-    'FROM {arr_specs} s '.
-      'LEFT JOIN {arr_spec_categories} c '.
-        'ON s.`spec_cat_id` = c.`spec_cat_id` '.
-      'LEFT JOIN {taxonomy_term_data} t '.
-        'ON c.`tid` = t.`tid` '.
-    'WHERE c.`tid` IN (' . implode(',', $tids) . ') '.
-    'ORDER BY t.`weight`, t.`name`, c.`weight`, c.`spec_category`, s.`weight`, s.`spec`;';
-  $results = db_query($sql);
-  
-  while ($row = $results->fetchObject()) {
-    if (!isset($output['groups'][$row->tid])) {
-      $output['groups'][$row->tid] = array(
-        'term' => $row->ven_cat,
-        'rows' => array(),
-      );
-    }
-    
-    if (!isset($output['groups'][$row->tid]['rows'][$row->spec_cat_id])) {
-      $output['groups'][$row->tid]['rows'][$row->spec_cat_id] = array(
-        'cat' => $row->spec_category,
-        'rows' => array(),
-      );
-    }
-    
-    $output['groups'][$row->tid]['rows'][$row->spec_cat_id]['rows'][$row->spec_id] = $row->spec;
-  }
-  
-  return $output;
-}
-
-/**
- * Fetch all node tech spec values for a specified taxonomy term
- */
-function arr_site_fetch_node_spec_data_by_tid($tid) {
-  $data = array(
-    'spec_categories' => array(),
-    'specs' => array(),
-    'nodes' => array(),
-  );
-  
-  $sql =
-    'SELECT '.
-      'v.`spec_id` as `spec_id`, '.
-      'v.`nid` as `nid`, '.
-      'v.`has_spec` as `has_spec`, '.
-      'v.`spec_comment` as `spec_comment`, '.
-      'c.`spec_cat_id` as `spec_cat_id`, '.
-      'r.`rating` as `cat_rating` '.
-    'FROM {arr_spec_vendors} v '.
-      'LEFT JOIN {arr_specs} s '.
-        'ON v.`spec_id` = s.`spec_id` '.
-      'LEFT JOIN {arr_spec_categories} c '.
-        'ON s.`spec_cat_id` = c.`spec_cat_id` '.
-      'LEFT JOIN {arr_spec_cat_vendor_rating} r '.
-        'ON v.`nid` = r.`nid` '.
-    'WHERE c.`tid` = :tid '.
-    'ORDER BY c.`tid`;';
-  $results = db_query($sql, array(':tid' => $tid));
-  
-  foreach ($results as $row) {
-    if (!isset($data['nodes'][$row->nid])) {
-      $data['nodes'][$row->nid] = array();
-    }
-    
-    if (!isset($data['nodes'][$row->nid][$row->spec_cat_id])) {
-      $data['nodes'][$row->nid][$row->spec_cat_id] = array(
-        'rating' => $row->cat_rating,
-        'specs' => array(),
-      );
-    }
-    
-    if (!in_array($row->spec_cat_id, $data['spec_categories'])) {
-      $data['spec_categories'][] = $row->spec_cat_id;
-    }
-    
-    if (!in_array($row->spec_id, $data['specs'])) {
-      $data['specs'][] = $row->spec_id;
-    }
-    
-    $data['nodes'][$row->nid][$row->spec_cat_id]['specs'][$row->spec_id] = array(
-      'has_spec' => $row->has_spec,
-      'spec_comment' => $row->spec_comment,
-    );
-  }
-  
-  return $data;
-}
-
-/**
- * Fetch the tech spec names for all specs for a specified taxonomy term
- */
-function arr_site_fetch_tech_specs_by_tid($tid) {
-  $groups = array();
-  
-  $sql =
-    'SELECT '.
-      's.`spec_id` AS `spec_id`, '.
-      's.`spec` AS `spec`, '.
-      'c.`spec_cat_id` AS `spec_cat_id`, '.
-      'c.`spec_category` AS `spec_category` '.
-    'FROM {arr_specs} s '.
-      'LEFT JOIN {arr_spec_categories} c '.
-        'ON s.`spec_cat_id` = c.`spec_cat_id` '.
-    'WHERE c.`tid` = :tid '.
-    'ORDER BY c.`weight`, c.`spec_category`, s.`weight`, s.`spec`;';
-  $results = db_query($sql, array(':tid' => $tid));
-  
-  foreach ($results as $row) {
-    if (!isset($groups[$row->spec_cat_id])) {
-      $groups[$row->spec_cat_id] = array(
-        'cat' => $row->spec_category,
-        'rows' => array(),
-      );
-    }
-    
-    $groups[$row->spec_cat_id]['rows'][$row->spec_id] = $row->spec;
-  }
-  
-  return $groups;
 }
 
 /**

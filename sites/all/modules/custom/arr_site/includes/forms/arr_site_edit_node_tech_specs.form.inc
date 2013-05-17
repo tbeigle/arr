@@ -3,8 +3,7 @@
 /**
  * Form to assign tech specs to a vendor node
  */
-function arr_site_edit_node_tech_specs($form, &$form_state) {
-  $nid = $form_state['build_info']['args'][0];
+function arr_site_edit_node_tech_specs($form, &$form_state, $nid) {
   $node = node_load($nid);
   
   $tids = array();
@@ -44,14 +43,18 @@ function arr_site_edit_node_tech_specs($form, &$form_state) {
       't.`tid` AS `tid`, '.
       't.`name` AS `ven_cat` '.
     'FROM {arr_specs} s '.
+      'LEFT JOIN {arr_spec_map} asm ' .
+        'ON s.`spec_id` = asm.`spec_id` ' .
+      'LEFT JOIN {arr_spec_cat_map} ascm ' .
+        'ON asm.`tcid` = ascm.`tcid` ' .
       'LEFT JOIN {arr_spec_categories} c '.
-        'ON s.`spec_cat_id` = c.`spec_cat_id` '.
+        'ON ascm.`spec_cat_id` = c.`spec_cat_id` '.
       'LEFT JOIN {taxonomy_term_data} t '.
-        'ON c.`tid` = t.`tid` '.
-    'ORDER BY t.`weight`, t.`name`, c.`weight`, c.`spec_category`, s.`weight`, s.`spec`;';
-  $results = db_query($sql);
+        'ON ascm.`tid` = t.`tid` '.
+    'ORDER BY t.`weight`, t.`name`, ascm.`weight`, c.`spec_category`, asm.`weight`, s.`spec`;';
+  $result = db_query($sql);
   
-  while ($row = $results->fetchObject()) {
+  foreach ($result as $row) {
     if (!isset($row->tid)) continue;
     if (!in_array($row->tid, $tids)) continue;
     
@@ -106,6 +109,7 @@ function arr_site_edit_node_tech_specs($form, &$form_state) {
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
       );
+      
       
       $form['specs'][$tkey][$ckey]['rating'] = array(
         '#type' => 'select',
