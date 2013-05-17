@@ -104,6 +104,7 @@ function arr_site_fetch_node_spec_data_by_tid($tid) {
         'ON ascm.`spec_cat_id` = c.`spec_cat_id` ' .
       'LEFT JOIN {arr_spec_cat_vendor_rating} r ' .
         'ON v.`nid` = r.`nid` ' .
+          'AND c.`spec_cat_id` = r.`spec_cat_id` ' .
     'WHERE ascm.`tid` = :tid ' .
     'ORDER BY ascm.`tid`;';
   $result = db_query($sql, array(':tid' => $tid));
