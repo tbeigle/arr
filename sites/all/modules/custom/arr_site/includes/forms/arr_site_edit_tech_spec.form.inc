@@ -255,13 +255,15 @@ function arr_site_submit_tech_spec(&$form, &$form_state) {
   }
   
   if ($is_new) {
-    $spec_id = db_insert('arr_specs')
+    $map_fields['spec_id'] = $spec_id = db_insert('arr_specs')
       ->fields($spec_fields)
       ->execute();
     
-    $tcsid = db_insert('arr_spec_map')
-      ->fields($map_fields)
-      ->execute();
+    if (!empty($map_fields['spec_id'])) {
+      $tcsid = db_insert('arr_spec_map')
+        ->fields($map_fields)
+        ->execute();
+    }
   } else {
     $spec_id = $sid;
     
