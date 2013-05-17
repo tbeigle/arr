@@ -33,18 +33,39 @@ function arr_site_schema() {
         'unsigned' => TRUE, 
         'not null' => TRUE,
       ),
-      'tid' => array(
-        'description' => 'The taxonomy term identifier.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'spec_category' => array(
         'description' => 'The name of this technical specification category.', 
         'type' => 'varchar', 
         'length' => 255, 
         'not null' => TRUE, 
         'default' => '',
+      ),
+    ),
+    'primary key' => array(
+      'spec_cat_id',
+    ),
+  );
+  
+  $schema['arr_spec_cat_map'] = array(
+    'description' => 'Maps spec categories to vendor taxonomy vocabulary terms.',
+    'fields' => array(
+      'tcid' => array(
+        'description' => 'The primary identifier for this relationship.', 
+        'type' => 'serial', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE,
+      ),
+      'tid' => array(
+        'description' => 'The taxonomy term identifier.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'spec_cat_id' => array(
+        'description' => 'The category identifier.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
       ),
       'weight' => array(
         'description' => 'The sorting weight for this category.',
@@ -54,7 +75,52 @@ function arr_site_schema() {
       ),
     ),
     'primary key' => array(
-      'spec_cat_id',
+      'tcid',
+    ),
+  );
+  
+  $schema['arr_spec_map'] = array(
+    'description' => 'Maps specs to instances of categories',
+    'fields' => array(
+      'tcsid' => array(
+        'description' => 'The primary identifier for this relationship.', 
+        'type' => 'serial', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE,
+      ),
+      'tcid' => array(
+        'description' => 'The terms_categories identifier, used to track the instantiation of this spec.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'spec_id' => array(
+        'description' => 'The primary identifier for the tech spec.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'The sorting weight for this tech spec.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'points_yes' => array(
+        'description' => 'The number of points to add/subtract if the value is yes.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'points_no' => array(
+        'description' => 'The number of points to add/subtract if the value is no.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array(
+      'tcsid',
     ),
   );
   
@@ -94,36 +160,12 @@ function arr_site_schema() {
         'unsigned' => TRUE, 
         'not null' => TRUE,
       ),
-      'spec_cat_id' => array(
-        'description' => 'The tech spec category identifier.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'spec' => array(
         'description' => 'The title of this technical specification.', 
         'type' => 'varchar', 
         'length' => 255, 
         'not null' => TRUE, 
         'default' => '',
-      ),
-      'weight' => array(
-        'description' => 'The sorting weight for this tech spec.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'points_yes' => array(
-        'description' => 'The number of points to add/subtract if the value is yes.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'points_no' => array(
-        'description' => 'The number of points to add/subtract if the value is no.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
       ),
     ),
     'primary key' => array(
@@ -211,5 +253,126 @@ function arr_site_update_7101() {
     );
     
     db_add_field('arr_specs', 'points_no', $spec);
+  }
+}
+
+/**
+ * Adds two new tables, ports over data, and deletes old fields to make spec categories and specs reusable amongst different taxonomy terms.
+ */
+function arr_site_update_7102() {
+  // Install the new schemas
+  $new_tables = array(
+    'arr_spec_cat_map',
+    'arr_spec_map',
+  );
+  
+  $schema = array();
+  
+  foreach ($new_tables as $table) {
+    if (!db_table_exists($table)) {
+      if (empty($schema[$table])) {
+        $schema = arr_site_schema();
+      }
+      
+      if (!empty($schema[$table])) {
+        db_create_table($table, $schema[$table]);
+      }
+    }
+  }
+  
+  if (db_table_exists('arr_spec_cat_map') && db_table_exists('arr_spec_map')) {
+    _arr_site_7102_map_data();
+    
+    // Update the old tables - delete unnecessary columns
+    $delete_fields = array(
+      'arr_spec_categories' => array(
+        'tid',
+        'weight',
+      ),
+      'arr_specs' => array(
+        'spec_cat_id',
+        'weight',
+        'points_yes',
+        'points_no',
+      ),
+    );
+    
+    foreach ($delete_fields as $table => $fields) {
+      foreach ($fields as $field) {
+        db_drop_field($table, $field);
+      }
+    }
+  }
+}
+
+/**
+ * Helper function to perform inserts
+ */
+function _arr_site_7102_map_data() {
+  $categories = $specs = array();
+  
+  // Map categories
+  $sql =
+    'SELECT * ' .
+    'FROM {arr_spec_categories};';
+  $result = db_query($sql);
+  
+  foreach ($result as $row) {
+    $categories[] = $row;
+  }
+  
+  foreach ($categories as $cat) {
+    $tcid = db_insert('arr_spec_cat_map')
+      ->fields(array(
+        'tid' => $cat->tid,
+        'spec_cat_id' => $cat->spec_cat_id,
+        'weight' => $cat->weight,
+      ))
+      ->execute();
+  }
+  
+  // Map specs
+  $unmapped = array();
+  
+  $sql =
+    'SELECT ' .
+      's.`spec_id` AS `spec_id`, ' .
+      's.`weight` AS `weight`, ' .
+      's.`points_yes` AS `points_yes`, ' .
+      's.`points_no` AS `points_no`, ' .
+      'c.`tcid` AS `tcid` ' .
+    'FROM {arr_specs} s ' .
+      'LEFT JOIN {arr_spec_cat_map} c ' .
+        'ON s.`spec_cat_id` = c.`spec_cat_id`;';
+  $result = db_query($sql);
+  
+  foreach ($result as $row) {
+    if (!empty($row->tcid)) {
+      $specs[] = $row;
+    }
+    // If no tcid exists then this is an orphaned spec and should be deleted
+    else {
+      $unmapped[] = $row->spec_id;
+    }
+  }
+  
+  if (!empty($unmapped)) {
+    foreach ($unmapped as $spec_id) {
+      $num_deleted = db_delete('arr_specs')
+        ->condition('spec_id', $spec_id)
+        ->execute();
+    }
+  }
+  
+  foreach ($specs as $spec) {
+    $tcsid = db_insert('arr_spec_map')
+      ->fields(array(
+        'tcid' => $spec->tcid,
+        'spec_id' => $spec->spec_id,
+        'weight' => $spec->weight,
+        'points_yes' => $spec->points_yes,
+        'points_no' => $spec->points_no,
+      ))
+      ->execute();
   }
 }

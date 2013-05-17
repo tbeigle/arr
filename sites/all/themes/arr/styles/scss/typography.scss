@@ -89,7 +89,23 @@ a {
 	&:hover, &:focus {
   	text-decoration: underline;
 	}
-} 
+}
+
+.node {
+  a.edit-link {
+    &:link,
+    &:visited {
+      color: $col-comment-link;
+    }
+  }
+}
+
+.not-front .node a {
+  &:link,
+  &:visited {
+    color: $col-bc-link;
+  }
+}
 
 li a.active {
 }
@@ -270,7 +286,7 @@ body {
   }
 }
 
-a.contact-vendor-button {
+.not-front .node a.contact-vendor-button {
   text-align: center;
   
   font: {

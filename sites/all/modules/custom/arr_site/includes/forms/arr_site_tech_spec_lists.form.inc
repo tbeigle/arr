@@ -32,15 +32,21 @@ function arr_site_tech_spec_lists($form, &$form_state) {
     
     $sql =
       'SELECT '.
-        'c.`spec_cat_id` AS `spec_cat_id`, '.
-        'c.`spec_category` AS `spec_category`, '.
-        'c.`weight` AS `weight`, '.
-        't.`tid` AS `tid`, '.
-        't.`name` AS `ven_cat` '.
-      'FROM {arr_spec_categories} c '.
-        'LEFT JOIN {taxonomy_term_data} t '.
-          'ON c.`tid` = t.`tid` '.
-      'ORDER BY t.`weight`, t.`name`, c.`weight`, c.`spec_category`;';
+        'c.`spec_cat_id` AS `spec_cat_id`, ' .
+        'c.`spec_category` AS `spec_category`, ' .
+        'ascm.`weight` AS `weight`, ' .
+        't.`tid` AS `tid`, ' .
+        't.`name` AS `ven_cat` ' .
+      'FROM {arr_spec_categories} c ' .
+        'LEFT JOIN {arr_spec_cat_map} ascm ' .
+          'ON c.`spec_cat_id` = ascm.`spec_cat_id` ' .
+        'LEFT JOIN {taxonomy_term_data} t ' .
+          'ON ascm.`tid` = t.`tid` ' .
+      'ORDER BY ' .
+        't.`weight`, ' .
+        't.`name`, ' .
+        'ascm.`weight`, ' .
+        'c.`spec_category`;';
   } else {
     $cols[] = 'Technical Specification';
     $cols[] = 'Points if Yes';
@@ -48,30 +54,42 @@ function arr_site_tech_spec_lists($form, &$form_state) {
     
     $sql =
       'SELECT '.
-        's.`spec_id` AS `spec_id`, '.
-        's.`spec` AS `spec`, '.
-        's.`weight` AS `weight`, '.
-        's.`points_yes` AS `points_yes`, '.
-        's.`points_no` AS `points_no`, '.
-        'c.`spec_cat_id` AS `spec_cat_id`, '.
-        'c.`spec_category` AS `spec_category`, '.
-        't.`tid` AS `tid`, '.
-        't.`name` AS `ven_cat` '.
-      'FROM {arr_specs} s '.
-        'LEFT JOIN {arr_spec_categories} c '.
-          'ON s.`spec_cat_id` = c.`spec_cat_id` '.
-        'LEFT JOIN {taxonomy_term_data} t '.
-          'ON c.`tid` = t.`tid` '.
-      'ORDER BY t.`weight`, t.`name`, c.`weight`, c.`spec_category`, s.`weight`, s.`spec`;';
+        's.`spec_id` AS `spec_id`, ' .
+        's.`spec` AS `spec`, ' .
+        'asm.`weight` AS `weight`, ' .
+        'asm.`points_yes` AS `points_yes`, ' .
+        'asm.`points_no` AS `points_no`, ' .
+        'asm.`tcsid` AS `tcsid`, ' .
+        'ascm.`tcid` AS `tcid`, ' .
+        'c.`spec_cat_id` AS `spec_cat_id`, ' .
+        'c.`spec_category` AS `spec_category`, ' .
+        't.`tid` AS `tid`, ' .
+        't.`name` AS `ven_cat` ' .
+      'FROM {arr_spec_map} asm ' .
+        'LEFT JOIN {arr_specs} s ' .
+          'ON asm.`spec_id` = s.`spec_id` ' .
+        'LEFT JOIN {arr_spec_cat_map} ascm ' .
+          'ON asm.`tcid` = ascm.`tcid` ' .
+        'LEFT JOIN {arr_spec_categories} c ' .
+          'ON ascm.`spec_cat_id` = c.`spec_cat_id` ' .
+        'LEFT JOIN {taxonomy_term_data} t ' .
+          'ON ascm.`tid` = t.`tid` ' .
+      'ORDER BY ' .
+        't.`weight`, ' .
+        't.`name`, ' .
+        'ascm.`weight`, ' .
+        'c.`spec_category`, ' .
+        'asm.`weight`, ' .
+        's.`spec`;';
   }
   
   $cols[] = 'Weight';
   
   // Perform the database query
-  $results = db_query($sql);
+  $result = db_query($sql);
   
   // Loop through the query results
-  while ($row = $results->fetchObject()) {
+  foreach ($result as $row) {
     // Build a keyed array for this TID if none exists and set the common 'term' variable
     if (!isset($groups[$row->tid])) {
       $groups[$row->tid] = array(
@@ -81,27 +99,27 @@ function arr_site_tech_spec_lists($form, &$form_state) {
     }
     
     if ($is_cat) {
-      // If this is the categories list, add the row array with the category ID as the array key
+      // If this is the categories list, add the row array with the category map ID as the array key
       $groups[$row->tid]['rows'][$row->spec_cat_id] = array(
-        $row->spec_category,
-        $row->weight,
+        'spec_category' => $row->spec_category,
+        'weight' => $row->weight,
       );
     } else {
       // If this is the specs list, build the category array if none exists
-      if (!isset($groups[$row->tid]['rows'][$row->spec_cat_id])) {
+      if (!isset($groups[$row->tid]['rows'][$row->tcid])) {
         // Each category array should have a category name keyed to 'cat' and a 'rows' array
-        $groups[$row->tid]['rows'][$row->spec_cat_id] = array(
+        $groups[$row->tid]['rows'][$row->tcid] = array(
           'cat' => $row->spec_category,
           'rows' => array(),
         );
       }
       
-      // Add the specs row values keyed to the spec_id
-      $groups[$row->tid]['rows'][$row->spec_cat_id]['rows'][$row->spec_id] = array(
-        $row->spec,
-        $row->points_yes,
-        $row->points_no,
-        $row->weight,
+      // Add the specs row values keyed to the tcsid primary key in the spec map table
+      $groups[$row->tid]['rows'][$row->tcid]['rows'][$row->spec_id] = array(
+        'spec' => $row->spec,
+        'points_yes' => $row->points_yes,
+        'points_no' => $row->points_no,
+        'weight' => $row->weight,
       );
     }
   }
@@ -122,12 +140,21 @@ function arr_site_tech_spec_lists($form, &$form_state) {
       );
       
       if ($is_cat) {
+        $form[$tkey]['clone_me'] = array(
+          '#markup' =>
+            l('Clone Categories and Specs', 'admin/structure/arr-manage-tech-specs/' . $tid . '/clone-category') .
+            '&nbsp;|&nbsp;' .
+            l('Map Categories and Specs to Another Vendor Type', 'admin/structure/arr-manage-tech-specs/' . $tid . '/map-category'),
+          '#prefix' => '<p>',
+          '#suffix' => '</p>',
+        );
+        
         $form[$tkey]['table_list'] = array(
-          '#markup' => _arr_site_tech_spec_list_table($cols, $data['rows'], TRUE),
+          '#markup' => _arr_site_tech_spec_list_table($cols, $data['rows'], TRUE, $tid),
         );
       } else {
-        foreach ($data['rows'] as $spec_cat_id => $d) {
-          $ckey = 'cat_'.$spec_cat_id;
+        foreach ($data['rows'] as $tcid => $d) {
+          $ckey = 'tcid_'.$tcid;
           
           $form[$tkey][$ckey] = array(
             '#type' => 'fieldset',
@@ -137,7 +164,7 @@ function arr_site_tech_spec_lists($form, &$form_state) {
           );
           
           $form[$tkey][$ckey]['table_list'] = array(
-            '#markup' => _arr_site_tech_spec_list_table($cols, $d['rows']),
+            '#markup' => _arr_site_tech_spec_list_table($cols, $d['rows'], FALSE, $tid),
           );
         }
       }

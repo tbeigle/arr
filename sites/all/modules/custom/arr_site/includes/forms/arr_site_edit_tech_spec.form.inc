@@ -3,10 +3,8 @@
 /**
  * Form to add/edit a technical specification
  */
-function arr_site_edit_tech_spec($form, &$form_state) {
-  $id = $form_state['build_info']['args'][0];
-  
-  $spec = arr_site_get_tech_spec($id);
+function arr_site_edit_tech_spec($form, &$form_state, $id = 0, $vendor_tid = 0) {
+  $spec = arr_site_get_tech_spec($vendor_tid, $id);
   
   if (!empty($spec->spec_id)) {
     $form['spec_id'] = array(
@@ -19,23 +17,42 @@ function arr_site_edit_tech_spec($form, &$form_state) {
     '' => 'Select one ...',
   );
   
-  $sql =
-    'SELECT '.
-      'c.`spec_cat_id` AS `spec_cat_id`, '.
-      'c.`spec_category` AS `spec_category`, '.
-      't.`tid` AS `tid`, '.
-      't.`name` AS `ven_cat` '.
-    'FROM {arr_spec_categories} c '.
-      'LEFT JOIN {taxonomy_term_data} t '.
-        'ON c.`tid` = t.`tid` '.
-    'ORDER BY t.`weight`, t.`name`, c.`weight`, c.`spec_category`;';
-  $results = db_query($sql);
+  if (empty($vendor_tid)) {
+    $sql =
+      'SELECT '.
+        'c.`spec_cat_id` AS `spec_cat_id`, ' .
+        'c.`spec_category` AS `spec_category`, ' .
+        't.`tid` AS `tid`, ' .
+        't.`name` AS `ven_cat` ' .
+      'FROM {arr_spec_categories} c ' .
+        'LEFT JOIN {arr_spec_cat_map} ascm ' .
+          'ON c.`spec_cat_id` = ascm.`spec_cat_id` ' .
+        'LEFT JOIN {taxonomy_term_data} t ' .
+          'ON ascm.`tid` = t.`tid` '.
+      'ORDER BY t.`weight`, t.`name`, ascm.`weight`, c.`spec_category`;';
+    $result = db_query($sql);
+  } else {
+    $sql =
+      'SELECT '.
+        'c.`spec_cat_id` AS `spec_cat_id`, ' .
+        'c.`spec_category` AS `spec_category`, ' .
+        't.`tid` AS `tid`, ' .
+        't.`name` AS `ven_cat` ' .
+      'FROM {arr_spec_categories} c ' .
+        'LEFT JOIN {arr_spec_cat_map} ascm ' .
+          'ON c.`spec_cat_id` = ascm.`spec_cat_id` ' .
+        'LEFT JOIN {taxonomy_term_data} t ' .
+          'ON ascm.`tid` = t.`tid` '.
+      'WHERE ascm.`tid` = :tid ' .
+      'ORDER BY t.`weight`, t.`name`, ascm.`weight`, c.`spec_category`;';
+    $result = db_query($sql, array(':tid' => $vendor_tid));
+  }
   
   $tids = $cats = array();
   $tids[] = t('Select one ...');
   $tid_default = 0;
   
-  while ($row = $results->fetchObject()) {
+  foreach ($result as $row) {
     if (!isset($tids[$row->tid])) {
       $tids[$row->tid] = $row->ven_cat;
     }
@@ -53,18 +70,59 @@ function arr_site_edit_tech_spec($form, &$form_state) {
     $cats[$row->tid][$row->spec_cat_id] = $row->spec_category;
   }
   
-  $form['tid'] = array(
-    '#type' => 'select',
-    '#title' => t('Vendor Category'),
-    '#options' => $tids,
-    '#default_value' => $tid_default,
-    '#required' => TRUE,
-    '#attributes' => array(
-      'class' => array(
-        'vendor-tid-select',
+  if (!empty($vendor_tid)) {
+    $form['tid'] = array(
+      '#type' => 'hidden',
+      '#value' => $vendor_tid,
+    );
+    
+    if (!empty($spec->spec_id)) {
+      $sql =
+        'SELECT ' .
+          'ascm.`tcid` AS `tcid`, ' .
+          'asm.`tcsid` AS `tcsid` ' .
+        'FROM {arr_spec_cat_map} ascm ' .
+          'LEFT JOIN {arr_spec_map} asm ' .
+            'ON ascm.`tcid` = asm.`tcid` ' .
+        'WHERE ascm.`tid` = :tid ' .
+          'AND asm.`spec_id` = :spec_id ' .
+        'ORDER BY asm.`spec_id`, ascm.`tid` LIMIT 1;';
+      $spec_data = db_query($sql, array(':tid' => $vendor_tid, ':spec_id' => $spec->spec_id))->fetchObject();
+      
+      if (!empty($spec_data->tcid)) {
+        $form['tcid'] = array(
+          '#type' => 'hidden',
+          '#value' => $spec_data->tcid,
+        );
+      }
+      
+      if (!empty($spec_data->tcsid)) {
+        $form['tcsid'] = array(
+          '#type' => 'hidden',
+          '#value' => $spec_data->tcsid,
+        );
+      }
+    }
+    
+    $change_all = array(
+      '#type' => 'checkbox',
+      '#title' => t('Change Spec Data for All Vendor Types'),
+      '#default_value' => 1,
+    );
+  } else {
+    $form['tid'] = array(
+      '#type' => 'select',
+      '#title' => t('Vendor Category'),
+      '#options' => $tids,
+      '#default_value' => $tid_default,
+      '#required' => TRUE,
+      '#attributes' => array(
+        'class' => array(
+          'vendor-tid-select',
+        ),
       ),
-    ),
-  );
+    );
+  }
   
   foreach ($cats as $tid => $ops) {
     $class = array(
@@ -113,6 +171,10 @@ function arr_site_edit_tech_spec($form, &$form_state) {
     '#default_value' => !empty($spec->weight) ? $spec->weight : 0,
   );
   
+  if (!empty($change_all)) {
+    $form['change_all'] = $change_all;
+  }
+  
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Save',
@@ -158,27 +220,83 @@ function arr_site_validate_tech_spec(&$form, &$form_state) {
 function arr_site_submit_tech_spec(&$form, &$form_state) {
   $options = array();
   
-  $key = 'tid_'.$form_state['values']['tid'].'_cats';
+  $tid = !empty($form_state['values']['tid']) ? $form_state['values']['tid'] : 0;
+  $key = 'tid_'.$tid.'_cats';
+  $spec_cat_id = $form_state['values'][$key];
+  $cur_tcid = !empty($form_state['values']['tcid']) ? $form_state['values']['tcid'] : 0;
+  $tcsid = !empty($form_state['values']['tcsid']) ? $form_state['values']['tcsid'] : 0;
+  $sid = !empty($form_state['values']['spec_id']) ? $form_state['values']['spec_id'] : 0;
+  $is_new = empty($sid);
+  $change_all = !empty($form_state['values']['change_all']);
+  $spec = !empty($form_state['values']['spec']) ? $form_state['values']['spec'] : '';
+  $points_yes = !empty($form_state['values']['points_yes']) ? $form_state['values']['points_yes'] : 0;
+  $points_no = !empty($form_state['values']['points_no']) ? $form_state['values']['points_no'] : 0;
+  $weight = !empty($form_state['values']['weight']) ? $form_state['values']['weight'] : 0;
   
-  $fields = array(
-    'spec_cat_id' => $form_state['values'][$key],
-    'spec' => $form_state['values']['spec'],
-    'points_yes' => $form_state['values']['points_yes'],
-    'points_no' => $form_state['values']['points_no'],
-    'weight' => $form_state['values']['weight'],
+  $spec_fields = array('spec' => $spec);
+  $map_fields = array(
+    'points_yes' => $points_yes,
+    'points_no' => $points_no,
+    'weight' => $weight,
   );
   
-  if (empty($form_state['values']['spec_id'])) {
-    $spec_id = db_insert('arr_specs')
-    ->fields($fields)
-    ->execute();
-  } else {
-    $num_updated = db_update('arr_specs')
-    ->fields($fields)
-    ->condition('spec_id', $form_state['values']['spec_id'], '=')
-    ->execute();
+  $sql =
+    'SELECT `tcid` ' .
+    'FROM {arr_spec_cat_map} ' .
+    'WHERE `tid` = :tid ' .
+      'AND `spec_cat_id` = :spec_cat_id ' .
+    'ORDER BY `tid`, `spec_cat_id` LIMIT 1;';
+  $tcid = db_query($sql, array(':tid' => $tid, ':spec_cat_id' => $spec_cat_id))->fetchField();
+  
+  $change_tcid = (!empty($cur_tcid) && !empty($tcid) && $cur_tcid != $tcid);
+  
+  if ($change_tcid || $is_new) {
+    $map_fields['tcid'] = $tcid;
   }
   
-  drupal_set_message('Your changes were successfully saved.');
+  if ($is_new) {
+    $spec_id = db_insert('arr_specs')
+      ->fields($spec_fields)
+      ->execute();
+    
+    $tcsid = db_insert('arr_spec_map')
+      ->fields($map_fields)
+      ->execute();
+  } else {
+    $spec_id = $sid;
+    
+    $num_updated = db_update('arr_specs')
+      ->fields($spec_fields)
+      ->condition('spec_id', $spec_id)
+      ->execute();
+    
+    if ($change_all) {
+      if (!empty($map_fields['tcid'])) {
+        // Only update this spec record's tcid field
+        $map_updated = db_update('arr_spec_map')
+          ->fields(array(
+            'tcid' => $map_fields['tcid'],
+          ))
+          ->condition('tcsid', $tcsid, '=')
+          ->execute();
+        
+        // Unset the tcid field so we don't screw up other spec instances
+        unset($map_fields['tcid']);
+      }
+      
+      // Update the remaining fields for all instances of this spec
+      $map_updated_all = db_update('arr_spec_map')
+        ->fields($map_fields)
+        ->condition('spec_id', $spec_id, '=')
+        ->execute();
+    } else {
+      $map_updated = db_update('arr_spec_map')
+        ->fields($map_fields)
+        ->condition('tcsid', $tcsid, '=')
+        ->execute();
+    }
+  }
+  
+  drupal_set_message('Your changes were saved.');
   $form_state['redirect'] = 'admin/structure/arr-manage-tech-specs/specs';
 }
