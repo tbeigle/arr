@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * Include some helper files.
+ */
+include_once 'includes/arr-category-table-helper.inc';
+
+/**
  * Add body classes if certain regions have content.
  *
  * Add IE-specific elements if necessary.
@@ -151,402 +156,245 @@ function arr_preprocess_page(&$vars) {
   // Vendor categories pages
   if (!empty($_arr_site['is_category_page'])) {
     // $vars['page']['content']['system_main']['nodes'] is an array of full node objects
-    $print_nodes = array();
+    $cat_page = new arr_vendor_category_page($vendor_type);
     
-    $nodes = !empty($vars['page']['content']['system_main']['nodes']) ? $vars['page']['content']['system_main']['nodes'] : array();
-    $ratings = array();
-    
-    // Reorganize the nodes array in order of ratings
-    foreach ($nodes as $key => $node) {
-      $type = !empty($node['#node']->type) ? $node['#node']->type : '';
-      
-      if (!empty($node['#node']->nid) && $type == $vendor_type) {
-        $n = $node['#node'];
-        $item = '';
-        
-        $field = field_view_field('node', $n, 'field_arr_rating', 'default');
-        
-        if (!empty($field['#items'])) {
-          $item = $field['#items'][0]['value'];
-        }
-        
-        if (is_numeric($item)) {
-          if (!isset($ratings[$item])) $ratings[$item] = array();
-          
-          $ratings[$item][] = $node;
-          
-          unset($vars['page']['content']['system_main']['nodes'][$key]);
-        }
-      }
+    if (!empty($vars['page']['content']['system_main']['nodes'])) {
+      $cat_page->build_ratings($vars['page']['content']['system_main']['nodes']);
     }
     
-    if (ksort($ratings)) {
-      $nodes_updated = array_reverse($ratings, true);
-      
-      foreach ($nodes_updated as $rating => $node_group) {
-        foreach ($node_group as $node) {
-          if (!empty($node['#node'])) $print_nodes[] = $node;
-        }
-      }
-    }
-    
-    $category_rows = array(
-      'thead' => array(
-        'top_row' => array(
-          '#attributes' => array(
-            'class' => array(
-              'top-row',
-            ),
-          ),
-          'cells' => array(
-            array(
-              'content' => t('Vendors'),
-              '#attributes' => array(
-                'class' => array(
-                  'key-column',
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      'tbody' => array(
-        'arr_rating' => array(
-          '#attributes' => array(
-            'class' => array(
-              'ratings',
-              'arr-rating',
-            ),
-          ),
-          'cells' => array(
-            array(
-              'content' => t('ARR Rating'),
-              '#attributes' => array(
-                'class' => array(
-                  'key-column',
-                ),
-              ),
-            ),
-          ),
-        ),
-        'user_rating' => array(
-          '#attributes' => array(
-            'class' => array(
-              'ratings',
-              'user-rating',
-            ),
-          ),
-          'cells' => array(
-            array(
-              'content' => t('Customer Rating'),
-              '#attributes' => array(
-                'class' => array(
-                  'key-column',
-                ),
-              ),
-            ),
-          ),
-        ),
-        'links' => array(
-          '#attributes' => array(
-            'class' => array(
-              'links',
-            ),
-          ),
-          'cells' => array(
-            array(
-              'content' => '',
-              '#attributes' => array(
-                'class' => array(
-                  'key-column',
-                ),
-              ),
-            ),
-          ),
-        ),
-        'bottom_line_button' => array(
-          '#attributes' => array(
-            'class' => array(
-              'bottom-line-button-row',
-              'collapsible-button-row',
-            ),
-          ),
-          'cells' => array(
-            array(
-              'content' => 
-                '<a class="collapse-expand-link" data-collapse-target=".bottom-line" href="#">'.
-                  t('Bottom Line').
-                '</a>',
-              '#attributes' => array(
-                'class' => array(
-                  'key-column',
-                ),
-              ),
-            ),
-          ),
-        ),
-        'bottom_line' => array(
-          '#attributes' => array(
-            'class' => array(
-              'bottom-line',
-              'collapsible',
-              'expanded',
-            ),
-          ),
-          'cells' => array(
-            array(
-              'content' => '',
-              '#attributes' => array(
-                'class' => array(
-                  'key-column',
-                ),
-              ),
-            ),
-          ),
-        ),
+    $key_col_attr = array(
+      'class' => array(
+        'key-column',
       ),
     );
     
-    if (!empty($_arr_site['arr_site_cat_specs']) && !empty($_arr_site['arr_site_node_specs'])) {
-      $cat_specs = $_arr_site['arr_site_cat_specs'];
-      $node_specs = $_arr_site['arr_site_node_specs'];
-      $n_specs = array();
+    // Start building the <thead>
+    $cat_page->table->add_row('top_row', array('class'=> array('top-row')), 'thead');
+    $cell_content = t('Vendors');
+    $cat_page->table->thead['top_row']->add_cell($cell_content, $key_col_attr);
+    
+    // Start building the <tbody>
+    // ARR Rating
+    $cat_page->table->add_row('arr_rating', array('class' => array('ratings','arr-rating')));
+    $cell_content = t('ARR Rating');
+    $cat_page->table->tbody['arr_rating']->add_cell($cell_content, $key_col_attr);
+    
+    // User Rating
+    $cat_page->table->add_row('user_rating', array('class' => array('ratings','user-rating')));
+    $cell_content = t('Customer Rating');
+    $cat_page->table->tbody['user_rating']->add_cell($cell_content, $key_col_attr);
+    
+    // Links
+    $cat_page->table->add_row('links', array('class' => array('links')));
+    $cat_page->table->tbody['links']->add_cell('', $key_col_attr);
+    
+    // Bottom Line Button
+    $cat_page->table->add_row('bottom_line_button', array('class' => array('bottom-line-button-row','collapsible-button-row')));
+    $cell_content = '<a class="collapse-expand-link" data-collapse-target=".bottom-line" href="#">' . t('Bottom Line') . '</a>';
+    $cat_page->table->tbody['bottom_line_button']->add_cell($cell_content, $key_col_attr);
+    
+    // Bottom Line
+    $cat_page->table->add_row('bottom_line', array('class' => array('bottom-line','collapsible','expanded')));
+    $cat_page->table->tbody['bottom_line']->add_cell('', $key_col_attr);
+    
+    // ...
+    $cat_specs = !empty($_arr_site['arr_site_cat_specs']) ? $_arr_site['arr_site_cat_specs'] : array();
+    $node_specs = !empty($_arr_site['arr_site_node_specs']) ? $_arr_site['arr_site_node_specs'] : array();
+    $cats_in_use = !empty($node_specs['spec_categories']) ? $node_specs['spec_categories'] : array();
+    $specs_in_use = !empty($node_specs['specs']) ? $node_specs['specs'] : array();
+    $n_specs = !empty($node_specs['nodes']) ? $node_specs['nodes'] : array();
+    
+    foreach ($cat_specs as $spec_cat_id => $spec_cat_data) {
+      if (empty($spec_cat_data['cat']) || empty($spec_cat_data['rows']) || !in_array($spec_cat_id, $cats_in_use)) continue;
       
-      if (!empty($node_specs['spec_categories'])) {
-        if (is_array($node_specs['spec_categories'])) {
-          $cats_in_use = $node_specs['spec_categories'];
-        }
-      }
+      $key_class = 'collapsible-spec-cat-'.$spec_cat_id;
+      $row_key = 'spec_cat_'.$spec_cat_id;
+      $row_attr = array(
+        'class' => array(
+          'cat-row',
+          'cat-row-'.$spec_cat_id,
+          'collapsible-button-row',
+          'ratings',
+        ),
+      );
       
-      if (!empty($node_specs['specs'])) {
-        if (is_array($node_specs['specs'])) {
-          $specs_in_use = $node_specs['specs'];
-        }
-      }
+      $cat_page->table->add_row($row_key, $row_attr);
+      $cell_content =
+        '<a class="collapse-expand-link" data-collapse-target=".' . $key_class . '" href="#">' .
+          t('!cat', array('!cat' => $spec_cat_data['cat'])) .
+        '</a>';
+      $cat_page->table->tbody[$row_key]->add_cell($cell_content, array('class' => array('key-column','cat-start')));            
       
-      if (!empty($node_specs['nodes'])) {
-        if (is_array($node_specs['nodes'])) {
-          $n_specs = $node_specs['nodes'];
-        }
-      }
+      $i = 0;
+      $last_spec = $pen_ult_spec = '';
       
-      if (!empty($cats_in_use) && !empty($specs_in_use)) {
-        foreach ($cat_specs as $spec_cat_id => $spec_cat_data) {
-          if (!empty($spec_cat_data['cat']) && !empty($spec_cat_data['rows']) && in_array($spec_cat_id, $cats_in_use)) {
-            $key_class = 'collapsible-spec-cat-'.$spec_cat_id;
-            
-            $category_rows['tbody']['spec_cat_'.$spec_cat_id] = array(
-              '#attributes' => array(
-                'class' => array(
-                  'cat-row',
-                  'cat-row-'.$spec_cat_id,
-                  'collapsible-button-row',
-                  'ratings',
-                ),
-              ),
-              'cells' => array(
-                array(
-                  'content' =>
-                    '<a class="collapse-expand-link" data-collapse-target=".'.$key_class.'" href="#">'.
-                      t('!cat', array('!cat' => $spec_cat_data['cat'])).
-                    '</a>',
-                  '#attributes' => array(
-                    'class' => array(
-                      'key-column',
-                      'cat-start',
-                    ),
-                  ),
-                ),
-              ),
-            );
-            
-            $i = 0;
-            $last_spec = $pen_ult_spec = '';
-            
-            foreach ($spec_cat_data['rows'] as $spec_id => $spec) {
-              if (in_array($spec_id, $specs_in_use)) {
-                $pen_ult_spec = $last_spec;
-                $last_spec = 'spec_'.$spec_id;
-                
-                $category_rows['tbody']['spec_'.$spec_id] = array(
-                  '#attributes' => array(
-                    'class' => array(
-                      $key_class,
-                      'collapsible',
-                      'spec-row',
-                      'collapsed',
-                    ),
-                  ),
-                  'cells' => array(
-                    array(
-                      'content' => t('!spec', array('!spec' => $spec)),
-                      '#attributes' => array(
-                        'class' => array(
-                          'key-column',
-                          'spec-column',
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-                
-                if ($i == 0) {
-                  $category_rows['tbody']['spec_'.$spec_id]['#attributes']['class'][] = 'first-cat-spec-row';
-                  $i++;
-                }
-              }
-            }
-            if (!empty($last_spec) && !empty($pen_ult_spec)) {
-              $category_rows['tbody'][$pen_ult_spec]['#attributes']['class'][] = 'pen-ult-spec';
-              $category_rows['tbody'][$last_spec]['#attributes']['class'][] = 'last-spec';
-            }
-          }
-        }
-      }
-      
-      foreach ($print_nodes as $node_array) {
-        $node = $node_array['#node'];
-        $website = !empty($node_array['field_vendor_website'][0]['#markup']) ? $node_array['field_vendor_website'][0]['#markup'] : '';
-        $nid = $node->nid;
-        $node_path = 'node/'.$nid;
+      foreach ($spec_cat_data['rows'] as $spec_id => $spec) {
+        if (!in_array($spec_id, $specs_in_use)) continue;
         
-        // head
-        $content = $text = '';
+        $row_key = 'spec_'.$spec_id;
         
-        $options = array(
-          'attributes' => array(
-            'class' => array(
-              'vendor-link',
-            ),
+        $pen_ult_spec = $last_spec;
+        $last_spec = $row_key;
+        
+        $row_attr = array(
+          'class' => array(
+            $key_class,
+            'collapsible',
+            'spec-row',
+            'collapsed',
           ),
-          'html' => TRUE,
         );
         
-        $lowest_cost = '';
-        
-        if (!empty($node->field_logo['und'][0]['uri'])) {
-          $options['attributes']['class'][] = 'vendor-logo';
-          $img_url = image_style_url('vendor_category_page_logos', $node->field_logo['und'][0]['uri']);
-          
-          if (!empty($node_array['field_lowest_cost']['#items'][0]['value'])) {
-            $lowest_cost = arr_vendor_lowest_cost(array('element' => $node_array['field_lowest_cost']));
-            
-            $_arr_site['has_lowest_cost'] = TRUE;
-          }
-          
-          $text = '<img src="'.$img_url.'" class="vendor-category-logo" alt="'.$node->title.'">';
-        } else {
-          $options['attributes']['class'][] = 'vendor-text';
-          $text = '<span class="title-text">'.$node->title.'</span>';
+        if ($i == 0) {
+          $row_attr['class'][] = 'first-cat-spec-row';
+          $i++;
         }
         
-        $category_rows['thead']['top_row']['cells'][] = array('content' => $lowest_cost.l($text, $node_path, $options));
-        
-        // arr_rating
-        $content = '';
-        
-        if (!empty($node->field_arr_rating['und'][0]['value'])) {
-          $field = field_view_field('node', $node, 'field_arr_rating');
-          $field['is_category_page'] = TRUE;
-          
-          $content .= theme('vendor_star_rating', $field);
-        }
-        
-        $category_rows['tbody']['arr_rating']['cells'][] = array(
-          'content' => $content,
-        );
-        
-        // user_rating
-        $ratings = array();
-        
-        if (db_table_exists('field_data_field_rating')) {
-          $sql =
-            'SELECT f.`field_rating_value` AS `field_rating_value` '.
-            'FROM {field_data_field_rating} f '.
-              'LEFT JOIN {comment} c '.
-                'ON f.`entity_id` = c.`cid` '.
-            'WHERE f.`entity_type` = :entity_type '.
-              'AND c.`status` = :status '.
-              'AND c.`nid` = :nid '.
-            'ORDER BY c.`nid`, c.`status` DESC;';
-          $results = db_query($sql, array(':entity_type' => 'comment', ':status' => 1, ':nid' => $nid));
-          
-          foreach ($results as $row) {
-            if (!empty($row->field_rating_value)) {
-              if (is_numeric($row->field_rating_value)) {
-                $ratings[] = $row->field_rating_value;
-              }
-            }
-          }
-        }
-        
-        $category_rows['tbody']['user_rating']['cells'][] = array(
-          'content' => theme('vendor_star_rating', array('ratings' => $ratings, 'is_user' => TRUE)),
-        );
-        
-        // links
-        $vendor_site_link = l(t('Vendor Website'), $website, array('attributes' => array('class' => array('vendor-website'))));
-        $full_review_link = l(t('Full Vendor Review'), $node_path, array('attributes' => array('class' => array('full-review'))));
-        
-        $category_rows['tbody']['links']['cells'][] = array(
-          'content' => 
-            '<p class="vendor-link">'.$vendor_site_link.'</p>'.
-            '<p class="full-review">'.$full_review_link.'</p>',
-        );
-        
-        // bottom_line_button
-        $category_rows['tbody']['bottom_line_button']['cells'][] = array('content' => '');
-        
-        // bottom_line
-        $bottom_line = !empty($node->field_bottom_line['und'][0]['safe_value']) ? $node->field_bottom_line['und'][0]['safe_value'] : '';
-        $category_rows['tbody']['bottom_line']['cells'][] = array(
-          'content' => $bottom_line,
-        );
-        
-        // spec_cat_%
-        foreach ($cats_in_use as $spec_cat_id) {
-          $content = '';
-          
-          if (!empty($n_specs[$nid][$spec_cat_id]['rating'])) {
-            $content .= theme('vendor_star_rating', array('cat_rating' => $n_specs[$nid][$spec_cat_id]['rating'], 'is_category_page' => TRUE));
-          }
-          
-          $category_rows['tbody']['spec_cat_'.$spec_cat_id]['cells'][] = array(
-            'content' => $content,
-          );
-        }
-        
-        foreach ($specs_in_use as $spec_id) {
-          $content = '<p class="spec-info">N/A</p>';
-          
-          if (!empty($n_specs[$nid])) {
-            foreach ($n_specs[$nid] as $spec_cat_id => $data) {
-              if (!empty($data['specs'][$spec_id])) {
-                $spec = is_array($data['specs'][$spec_id]) ? $data['specs'][$spec_id] : array();
-                
-                if (!empty($spec['spec_comment'])) {
-                  $content = '<p class="spec-info">'.$spec['spec_comment'].'</p>';
-                } elseif (isset($spec['has_spec'])) {
-                  $spec_info = ($spec['has_spec'] == 1) ? 'YES' : 'NO';
-                  $content = '<p class="spec-info">'.$spec_info.'</p>';
-                }
-                break;
-              }
-            }
-          }
-          
-          $category_rows['tbody']['spec_'.$spec_id]['cells'][] = array(
-            'content' => $content,
-          );
-        }
+        $cat_page->table->add_row($row_key, $row_attr);
+        $cell_content = t('!spec', array('!spec' => $spec));
+        $cat_page->table->tbody[$row_key]->add_cell($cell_content, array('class' => array('key-column','spec-column')));
       }
       
-      if (!empty($category_rows)) {
-        $vars['page']['content']['vendors_table'] = array(
-          'rows' => $category_rows,
-          '#theme' => 'vendor_category_table',
-        );
+      if (!empty($last_spec) && !empty($pen_ult_spec)) {
+        $cat_page->table->tbody[$pen_ult_spec]->attributes['class'][] = 'pen-ult-spec';
+        $cat_page->table->tbody[$last_spec]->attributes['class'][] = 'last-spec';
       }
+    }
+    
+    foreach ($cat_page->print_nodes as $node_array) {
+      $node = $node_array['#node'];
+      $website = !empty($node_array['field_vendor_website'][0]['#markup']) ? $node_array['field_vendor_website'][0]['#markup'] : '';
+      $nid = $node->nid;
+      $node_path = 'node/'.$nid;
+      
+      // head
+      $cell_content = $text = '';
+      
+      $options = array(
+        'attributes' => array(
+          'class' => array(
+            'vendor-link',
+          ),
+        ),
+        'html' => TRUE,
+      );
+      
+      $lowest_cost = '';
+      
+      if (!empty($node->field_logo['und'][0]['uri'])) {
+        $options['attributes']['class'][] = 'vendor-logo';
+        $img_url = image_style_url('vendor_category_page_logos', $node->field_logo['und'][0]['uri']);
+        
+        if (!empty($node_array['field_lowest_cost']['#items'][0]['value'])) {
+          $lowest_cost = arr_vendor_lowest_cost(array('element' => $node_array['field_lowest_cost']));
+          
+          $_arr_site['has_lowest_cost'] = TRUE;
+        }
+        
+        $text = '<img src="'.$img_url.'" class="vendor-category-logo" alt="' . $node->title . '">';
+      } else {
+        $options['attributes']['class'][] = 'vendor-text';
+        $text = '<span class="title-text">' . $node->title . '</span>';
+      }
+      
+      $cell_content = $lowest_cost . l($text, $node_path, $options);
+      $cat_page->table->thead['top_row']->add_cell($cell_content);
+      
+      // arr_rating
+      $cell_content = '';
+      
+      if (!empty($node->field_arr_rating['und'][0]['value'])) {
+        $field = field_view_field('node', $node, 'field_arr_rating');
+        $field['is_category_page'] = TRUE;
+        
+        $cell_content .= theme('vendor_star_rating', $field);
+      }
+      
+      $cat_page->table->tbody['arr_rating']->add_cell($cell_content);
+      
+      // user_rating
+      $ratings = arr_get_vendor_user_ratings($nid);
+      $cell_content = theme('vendor_star_rating', array('ratings' => $ratings, 'is_user' => TRUE));
+      $cat_page->table->tbody['user_rating']->add_cell($cell_content);
+      
+      // links
+      $cell_content =
+        '<p class="vendor-link">' . l(t('Vendor Website'), $website, array('attributes' => array('class' => array('vendor-website')))) . '</p>' .
+        '<p class="full-review">' . l(t('Full Vendor Review'), $node_path, array('attributes' => array('class' => array('full-review')))) . '</p>';
+      
+      $cat_page->table->tbody['links']->add_cell($cell_content);
+      
+      // bottom_line_button
+      $cat_page->table->tbody['bottom_line_button']->add_cell();
+      
+      // bottom_line
+      if (!empty($node->field_bottom_line['und'][0]['safe_value'])) {
+        $max_chars = 150;
+        $bl = $node->field_bottom_line['und'][0]['safe_value'];
+        
+        if (strlen($bl) > $max_chars) {
+          $more_text = t('Read More');
+          $options = array(
+            'attributes' => array(
+              'class' => array(
+                'bottom-line-read-more',
+              ),
+            ),
+          );
+          
+          $link = l($more_text, 'node/' . $nid, $options);
+          $cell_content = substr($node->field_bottom_line['und'][0]['safe_value'], 0, $max_chars) . ' ... ' . $link;
+        } else {
+          $cell_content = $node->field_bottom_line['und'][0]['safe_value'];
+        }
+      } else {
+        $cell_content = '';
+      }
+      
+      $cat_page->table->tbody['bottom_line']->add_cell($cell_content);
+      
+      // Category ratings
+      foreach ($cats_in_use as $spec_cat_id) {
+        $cell_content = '';
+        $row_key = 'spec_cat_'.$spec_cat_id;
+        
+        if (!empty($n_specs[$nid][$spec_cat_id]['rating'])) {
+          $cell_content .= theme('vendor_star_rating', array('cat_rating' => $n_specs[$nid][$spec_cat_id]['rating'], 'is_category_page' => TRUE));
+        }
+        
+        $cat_page->table->tbody[$row_key]->add_cell($cell_content);
+      }
+      
+      // Vendor spec details
+      foreach ($specs_in_use as $spec_id) {
+        $row_key = 'spec_'.$spec_id;
+        $cell_content = '<p class="spec-info">N/A</p>';
+        
+        if (!empty($n_specs[$nid])) {
+          foreach ($n_specs[$nid] as $spec_cat_id => $data) {
+            if (!empty($data['specs'][$spec_id])) {
+              $spec = is_array($data['specs'][$spec_id]) ? $data['specs'][$spec_id] : array();
+              
+              if (!empty($spec['spec_comment'])) {
+                $cell_content = '<p class="spec-info">' . t('!spec_comment', array('!spec_comment' => $spec['spec_comment'])) . '</p>';
+              } elseif (isset($spec['has_spec'])) {
+                $spec_info = ($spec['has_spec'] == 1) ? 'YES' : 'NO';
+                $cell_content = '<p class="spec-info">' . t('!spec_info', array('!spec_info' => $spec_info)) . '</p>';
+              }
+              break;
+            }
+          }
+        }
+        
+        $cat_page->table->tbody[$row_key]->add_cell($cell_content);
+      }
+    }
+    
+    if (!empty($cat_page->table->tbody)) {
+      $vars['page']['content']['vendors_table'] = array(
+        'rows' => $cat_page->table,
+        '#theme' => 'vendor_category_table',
+      );
     }
   }
 }
@@ -800,63 +648,68 @@ function arr_vendor_category_table($vars) {
   $output = '';
   
   $el = $vars['rows'];
-  $rows = !empty($el['rows']) ? $el['rows'] : '';
+  $table_sections = !empty($el['rows']) ? $el['rows'] : '';
   $inner_class = 'inner'.(!empty($_arr_site['has_lowest_cost']) ? ' has-lowest-cost' : '');
   
-  if (!empty($rows)) {
-    $output .=
-      '<div id="vendors-by-category-wrapper">'.
-        '<div class="'.$inner_class.'">'.
-          '<table id="vendors-by-category">';
+  if (empty($table_sections)) return $output;
+  
+  $output .=
+    '<div id="vendors-by-category-wrapper">'.
+      '<div class="'.$inner_class.'">'.
+        '<table id="vendors-by-category">';
+  
+  foreach ($table_sections as $section_tag => $rows) {
+    $cell_tag = ($section_tag == 'thead') ? 'th' : 'td';
     
-    foreach ($rows as $section_tag => $rows) {
-      $cell_tag = ($section_tag == 'thead') ? 'th' : 'td';
+    $output .= '<'.$section_tag.'>';
+    
+    foreach ($rows as $row_key => $row) {
+      $row_class = !empty($row->attributes['class']) ? $row->attributes['class'] : array();
+      $is_spec = in_array('spec-row', $row_class);
       
-      $output .= '<'.$section_tag.'>';
+      $row_attr = !empty($row->attributes) ? arr_attr($row->attributes) : '';
+      $output .= '<tr'.$row_attr.'>';
       
-      foreach ($rows as $row_key => $row) {
-        $row_class = !empty($row['#attributes']['class']) ? $row['#attributes']['class'] : array();
-        $is_spec = in_array('spec-row', $row_class);
+      $add_first_ven_class = $no_top_b_class = FALSE;
+      
+      foreach ($row->cells as $cell_key => $cell) {
+        if (empty($cell->attributes)) $cell->attributes = array();
+        if (empty($cell->attributes['class'])) $cell->attributes['class'] = array();
         
-        $row_attr = !empty($row['#attributes']) ? arr_attr($row['#attributes']) : '';
-        $output .= '<tr'.$row_attr.'>';
+        $is_key = in_array('key-column', $cell->attributes['class']);
+        $is_ven = in_array('vendor-column', $cell->attributes['class']);
         
-        $add_first_ven_class = $no_top_b_class = FALSE;
-        
-        foreach ($row['cells'] as $cell_key => $cell) {
-          if (empty($cell['#attributes'])) $cell['#attributes'] = array();
-          if (empty($cell['#attributes']['class'])) $cell['#attributes']['class'] = array();
+        if (!$is_key && !$is_ven) {
+          $cell->attributes['class'][] = 'vendor-column';
           
-          $is_key = in_array('key-column', $cell['#attributes']['class']);
-          $is_ven = in_array('vendor-column', $cell['#attributes']['class']);
-          
-          if (!$is_key && !$is_ven) {
-            $cell['#attributes']['class'][] = 'vendor-column';
+          if ($add_first_ven_class) {
+            $cell->attributes['class'][] = 'first-vendor';
             
-            if ($add_first_ven_class) {
-              $cell['#attributes']['class'][] = 'first-vendor';
-              
-              $add_first_ven_class = FALSE;
-            }
-          } elseif ($is_key) {
-            $add_first_ven_class = TRUE;
+            $add_first_ven_class = FALSE;
           }
-          
-          $cell_attr = arr_attr($cell['#attributes']);
-          $output .= '<'.$cell_tag.$cell_attr.'><div class="cell-wrapper">'.$cell['content'].'</div></'.$cell_tag.'>';
+        } elseif ($is_key) {
+          $add_first_ven_class = TRUE;
         }
         
-        $output .= '</tr>';
-      }      
+        $cell_attr = arr_attr($cell->attributes);
+        $output .=
+          '<' . $cell_tag . $cell_attr . '>' .
+            '<div class="cell-wrapper">' .
+              $cell->content .
+            '</div>' .
+          '</' . $cell_tag . '>';
+      }
       
-      $output .= '</'.$section_tag.'>';
-    }
+      $output .= '</tr>';
+    }      
     
-    $output .=
-          '</table>'.
-        '</div>'.
-      '</div>';
+    $output .= '</'.$section_tag.'>';
   }
+  
+  $output .=
+        '</table>'.
+      '</div>'.
+    '</div>';
   
   return $output;
 }
@@ -1248,6 +1101,37 @@ function arr_is_array($var) {
   
   return $output;
 }
+
+/**
+ * Gets all user ratings for a vendor node
+ */
+function arr_get_vendor_user_ratings($nid) {
+  $output = array();
+  
+  if (db_table_exists('field_data_field_rating')) {
+    $sql =
+      'SELECT f.`field_rating_value` AS `field_rating_value` '.
+      'FROM {field_data_field_rating} f '.
+        'LEFT JOIN {comment} c '.
+          'ON f.`entity_id` = c.`cid` '.
+      'WHERE f.`entity_type` = :entity_type '.
+        'AND c.`status` = :status '.
+        'AND c.`nid` = :nid '.
+      'ORDER BY c.`nid`, c.`status` DESC;';
+    $result = db_query($sql, array(':entity_type' => 'comment', ':status' => 1, ':nid' => $nid));
+    
+    foreach ($result as $row) {
+      if (!empty($row->field_rating_value)) {
+        if (is_numeric($row->field_rating_value)) {
+          $output[] = $row->field_rating_value;
+        }
+      }
+    }
+  }
+  
+  return $output;
+}
+
 
 /**
  * Function to check whether the browser is IE and return the version
