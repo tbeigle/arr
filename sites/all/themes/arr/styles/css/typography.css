@@ -15,6 +15,7 @@ http://sachagreif.com/sass-color-variables/
 /*********************
 Color Variables
 *********************/
+/*$col-main-txt: #696969;*/
 /*********************
 Font Variables
 *********************/
@@ -133,7 +134,7 @@ body {
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
   line-height: 1.5454;
-  color: dimgrey; }
+  color: #333333; }
 
 #nav ul li {
   font-weight: normal;
@@ -328,7 +329,7 @@ html .field-collection-container .field-name-field-slides .field-collection-item
   font-weight: normal;
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
-  color: dimgrey; }
+  color: #333333; }
   #popups h2 {
     font-weight: normal;
     font-size: 17px;
@@ -433,3 +434,13 @@ html .field-collection-container .field-name-field-slides .field-collection-item
     text-decoration: underline; }
   .join-arr a:hover, .join-arr a:active {
     text-decoration: none; }
+
+a.bottom-line-read-more:link, a.bottom-line-read-more:visited {
+  display: block;
+  color: #0271d8;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-align: center;
+  font-weight: bold; }
+a.bottom-line-read-more:hover, a.bottom-line-read-more:active {
+  text-decoration: none; }

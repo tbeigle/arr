@@ -782,3 +782,24 @@ html {
     }
   }
 }
+
+a.bottom-line-read-more {
+  &:link,
+  &:visited {
+    display: block;
+    color: $col-review-link;
+    
+    text: {
+      transform: uppercase;
+      decoration: underline;
+      align: center;
+    }
+    
+    font-weight: bold;
+  }
+  
+  &:hover,
+  &:active {
+    text-decoration: none;
+  }
+}

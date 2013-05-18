@@ -15,6 +15,7 @@ http://sachagreif.com/sass-color-variables/
 /*********************
 Color Variables
 *********************/
+/*$col-main-txt: #696969;*/
 /*********************
 Font Variables
 *********************/
@@ -150,7 +151,7 @@ p.spec-info, p.no-ratings {
       font-weight: bold;
       font-size: 12px;
       font-family: nexa_boldregular, "Arial Narrow", Arial, sans-serif;
-      line-height: 1.545;
+      line-height: 1.5454;
       text-align: right;
       text-transform: uppercase;
       color: #113a60; }
