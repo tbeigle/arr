@@ -72,19 +72,6 @@ function arr_preprocess_html(&$vars) {
   
   $vars['html_classes'] = !empty($html_classes) ? ' '.implode(' ', $html_classes) : '';
   
-  // Add the viewport meta tag
-  /*$viewport_tag = array(
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'name' => 'viewport',
-      'content' => 'width=device-width',
-    ),
-    '#weight' => '-88888',
-  );
-  
-  drupal_add_html_head($viewport_tag, 'meta_viewport');*/
-  
   // Add the Apple Touch icons
   $apple_icons = array(144, 114, 72, 57);
   
