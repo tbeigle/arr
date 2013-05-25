@@ -109,3 +109,35 @@ function arr_site_comment_validate(&$form, &$form_state) {
  */
 function arr_site_comment_submit(&$form, &$form_state) {
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ */
+function arr_site_form_taxonomy_form_term_alter(&$form, &$form_state) {
+  $form['#validate'][] = 'arr_site_form_taxonomy_form_term_validate';
+  $form['#submit'][] = 'arr_site_form_taxonomy_form_term_submit';
+}
+
+/**
+ * Validation handler for the taxonomy term form
+ */
+function arr_site_form_taxonomy_form_term_validate(&$form, &$form_state) {
+}
+
+/**
+ * Submission handler for the taxonomy term form
+ */
+function arr_site_form_taxonomy_form_term_submit(&$form, &$form_state) {
+  $delete_specs = FALSE;
+  
+  if (!isset($form_state['values']['delete'])) return;
+  
+  if ($form_state['values']['delete'] === TRUE && !empty($form_state['values']['confirm']) && !empty($form_state['values']['tid'])) {
+    $delete_specs = TRUE;
+    $tid = $form_state['values']['tid'];
+  }
+  
+  if (!$delete_specs) return;
+  
+  arr_site_delete_all_spec_data_for_tid($tid);
+}

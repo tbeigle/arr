@@ -609,3 +609,37 @@ function arr_site_field_formatter_view($entity_type, $entity, $field, $instance,
   
   return $element;
 }
+
+/**
+ * Implements hook_cron()
+ */
+function arr_site_cron() {
+  // Delete orphaned spec categories
+  $sql =
+    'SELECT `tid` ' .
+    'FROM {taxonomy_term_data};';
+  $result = db_query($sql);
+  
+  $active_tids = array();
+  foreach ($result as $row) {
+    $active_tids[] = $row->tid;
+  }
+  
+  $sql =
+    'SELECT `tid` ' .
+    'FROM {arr_spec_cat_map} ' .
+    'GROUP BY `tid` ' .
+    'ORDER BY `tid`;';
+  $result = db_query($sql);
+  
+  $deleted_tids = array();
+  foreach ($result as $row) {
+    if (!in_array($row->tid, $active_tids)) {
+      $deleted_tids[] = $row->tid;
+    }
+  }
+  
+  foreach ($deleted_tids as $tid) {
+    arr_site_delete_all_spec_data_for_tid($tid);
+  }
+}
