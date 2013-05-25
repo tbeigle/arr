@@ -16,3 +16,7 @@ sandbox/*
 # Ignore SASS cache
 .sass-cache
 */.sass-cache
+
+# Ignore the ftp_quota and error_log files
+.ftpquota
+error_log
