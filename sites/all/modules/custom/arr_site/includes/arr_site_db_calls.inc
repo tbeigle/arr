@@ -76,6 +76,118 @@ function arr_site_clone_vendor($mapped_tid, $unmapped_tid) {
 }
 
 /**
+ * Function to delete all tech spec data for a deleted taxonomy term
+ */
+function arr_site_delete_all_spec_data_for_tid($tid) {
+  $sql =
+    'SELECT `spec_cat_id` ' .
+    'FROM {arr_spec_cat_map} ' .
+    'WHERE `tid` = :tid ' .
+    'ORDER BY `tid`;';
+  $result = db_query($sql, array(':tid' => $tid));
+  
+  foreach ($result as $row) {
+    if (!empty($row->spec_cat_id)) arr_site_delete_category_by_spec_cat_id($row->spec_cat_id, $tid);
+  }
+}
+
+/**
+ * Function to delete tech spec categories
+ */
+function arr_site_delete_category_by_spec_cat_id($spec_cat_id, $vendor_tid = NULL) {
+  $tcids = $spec_ids = array();
+  
+  $sql =
+    'SELECT `tcid`, `tid` ' .
+    'FROM {arr_spec_cat_map} ' .
+    'WHERE `spec_cat_id` = :spec_cat_id ' .
+    'ORDER BY `tid`, `spec_cat_id`;';
+  $result = db_query($sql, array(':spec_cat_id' => $spec_cat_id));
+  
+  foreach ($result as $row) {
+    $tcids[$row->tcid] = $row->tid;
+  }
+  
+  // Deleting
+  if (empty($vendor_tid) || count($tcids) == 1) {
+    // Remove from spec_categories table
+    $cat_deleted = db_delete('arr_spec_categories')
+      ->condition('spec_cat_id', $spec_cat_id)
+      ->execute();
+    
+    $cat_vendor_rating_deleted = db_delete('arr_spec_cat_vendor_rating')
+      ->condition('spec_cat_id', $spec_cat_id);
+    
+    foreach ($tcids as $tcid => $tid) {
+      // Remove from cat_map table
+      $cat_map_deleted = db_delete('arr_spec_cat_map')
+        ->condition('tcid', $tcid)
+        ->execute();
+      
+      // Grab all the spec_ids
+      $sql =
+        'SELECT `spec_id` ' .
+        'FROM {arr_spec_map} ' .
+        'WHERE `tcid` = :tcid ' .
+        'ORDER BY `tcid`;';
+      $result = db_query($sql, array(':tcid' => $tcid));
+      
+      foreach ($result as $row) {
+        if (!in_array($row->spec_id, $spec_ids)) $spec_ids[] = $row->spec_id;
+      }
+      
+      $spec_map_deleted = db_delete('arr_spec_map')
+        ->condition('tcid', $tcid)
+        ->execute();
+    }
+    
+    // Delete specs where appropriate
+    $delete_specs = array();
+    
+    foreach ($spec_ids as $spec_id) {
+      $sql =
+        'SELECT COUNT(*) ' .
+        'FROM {arr_spec_map} ' .
+        'WHERE `spec_id` = :spec_id ' .
+        'ORDER BY `spec_id`;';
+      $count = db_query($sql, array(':spec_id' => $spec_id))->fetchField();
+      
+      if (empty($count)) {
+        $delete_specs[] = $spec_id;
+      }
+    }
+    
+    foreach ($delete_specs as $spec_id) {
+      $spec_vendors_deleted = db_delete('arr_spec_vendors')
+        ->condition('spec_id', $spec_id)
+        ->execute();
+      
+      $spec_deleted = db_delete('arr_specs')
+        ->condition('spec_id', $spec_id)
+        ->execute();
+    }
+    
+    drupal_set_message('The technical specification category was successfully deleted.');
+  }
+  // Unmapping
+  else {
+    $tcid_keys = array_keys($tcids, $vendor_tid);
+    
+    foreach ($tcid_keys as $tcid) {
+      $cat_map_deleted = db_delete('arr_spec_cat_map')
+        ->condition('tcid', $tcid)
+        ->execute();
+      
+      $spec_map_deleted = db_delete('arr_spec_map')
+        ->condition('tcid', $tcid)
+        ->execute();
+    }
+    
+    drupal_set_message('The technical specification category was successfully unmapped from the chosen vendor type.');
+  }
+}
+
+/**
  * Fetch all node tech spec values for a specified taxonomy term
  */
 function arr_site_fetch_node_spec_data_by_tid($tid) {
