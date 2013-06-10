@@ -160,10 +160,13 @@ p.spec-info, p.no-ratings {
         display: inline-block;
         width: 125px;
         padding-right: 5px; }
-    .vendor-categories-page #vendors-by-category tr th.vendor-column .cell-wrapper,
-    .vendor-categories-page #vendors-by-category tr td.vendor-column .cell-wrapper {
-      width: 156px;
-      padding: 8px; }
+    .vendor-categories-page #vendors-by-category tr th.vendor-column,
+    .vendor-categories-page #vendors-by-category tr td.vendor-column {
+      vertical-align: top; }
+      .vendor-categories-page #vendors-by-category tr th.vendor-column .cell-wrapper,
+      .vendor-categories-page #vendors-by-category tr td.vendor-column .cell-wrapper {
+        width: 156px;
+        padding: 8px; }
   .vendor-categories-page #vendors-by-category tr.top-row th {
     position: relative;
     height: 80px;
