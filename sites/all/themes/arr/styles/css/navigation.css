@@ -61,6 +61,22 @@ http://webcodertools.com/imagetobase64converter
   #nav li {
     list-style: none;
     margin: 0; }
+  #nav .content > ul > li {
+    height: 56px; }
+    #nav .content > ul > li > ul {
+      position: absolute;
+      z-index: 100;
+      left: -8px;
+      top: 56px;
+      display: none;
+      width: auto;
+      min-width: 154px;
+      white-space: nowrap;
+      padding: 0 8px;
+      background-color: #ff3000; }
+      #nav .content > ul > li > ul ul {
+        position: relative;
+        margin: 4px 8px 0 16px; }
   #nav ul {
     padding: 0; }
     #nav ul li {
@@ -72,24 +88,13 @@ http://webcodertools.com/imagetobase64converter
         margin-left: 0; }
       #nav ul li a.no-link {
         cursor: default; }
-      #nav ul li ul {
-        position: absolute;
-        z-index: 100;
-        left: -8px;
-        display: none;
-        width: auto;
-        min-width: 154px;
-        white-space: nowrap;
-        padding-top: 11px;
-        padding-right: 8px;
-        padding-bottom: 0;
-        padding-left: 8px;
-        background-color: #ff3000; }
-        #nav ul li ul li {
-          float: none;
-          padding-top: 0;
-          padding-bottom: 7px;
-          margin: 0; }
+      #nav ul li ul li {
+        float: none;
+        padding-top: 0;
+        padding-bottom: 7px;
+        margin: 0; }
+        #nav ul li ul li a.no-link {
+          cursor: pointer; }
       #nav ul li:hover ul, #nav ul li:active ul {
         display: block; }
     #nav ul li.expanded > a {
@@ -97,6 +102,8 @@ http://webcodertools.com/imagetobase64converter
       background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOEE2RDgwNUJBNTU2RDJGRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2M0NDRTNGQTNBNjExMUUyQkFDMkE2RkJBMjUzQzJEMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2M0NDRTNGOTNBNjExMUUyQkFDMkE2RkJBMjUzQzJEMyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkM1M0VFQUU2MTkyMDY4MTE4MjJBQzQ5QkUzMkYxOTRGIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4QTZEODA1QkE1NTZEMkZFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+bQ6WiwAAAFtJREFUeNpi/P//fwADA0M+A3YwkQGoQACI3//HBCAxASagqg9gldh0g+SAqkBYAYsJIDEGJqjqB0C8AEn3AqgYA8wEdFMUYOIsSLqQTXkAE2RBc9hCdJcCBBgAKLFhioqX0ikAAAAASUVORK5CYII=);
       background-position: right 9px;
       background-repeat: no-repeat; }
+    #nav ul li li.expanded > a {
+      background-position: right 5px; }
 
 /**
  * Bubble menus

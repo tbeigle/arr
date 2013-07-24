@@ -7,8 +7,34 @@
   ul,
   li {
     list-style: none;
-    
     margin: 0;
+  }
+  
+  .content > ul {
+    &> li {
+      height: 56px;
+      
+      &> ul {
+        position: absolute;
+        z-index: 100;
+        left: -8px;
+        top: 56px;
+        display: none;
+        width: auto;
+        min-width: 154px;
+        white-space: nowrap;
+        padding: 0 8px;
+        
+        background: {
+          color: $col-bg-nav-child-ul;
+        }
+        
+        ul {
+          position: relative;
+          margin: 4px 8px 0 16px;
+        }
+      }
+    }
   }
   
   ul {
@@ -35,25 +61,6 @@
       }
       
       ul {
-        position: absolute;
-        z-index: 100;
-        left: -8px;
-        display: none;
-        width: auto;
-        min-width: 154px;
-        white-space: nowrap;
-        
-        padding: {
-          top: 11px;
-          right: 8px;
-          bottom: 0;
-          left: 8px;
-        }
-        
-        background: {
-          color: $col-bg-nav-child-ul;
-        }
-        
         li {
           float: none;
           padding: {
@@ -62,6 +69,10 @@
           }
           
           margin: 0;
+          
+          a.no-link {
+            cursor: pointer;
+          }
         }
       }
       
@@ -82,6 +93,9 @@
         position: right 9px;
         repeat: no-repeat;
       }
+    }
+    li li.expanded > a {
+      background-position: right 5px;
     }
   }
 }
