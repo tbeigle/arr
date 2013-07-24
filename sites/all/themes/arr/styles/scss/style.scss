@@ -202,7 +202,7 @@ body {
   #toolbar{}
   
   #page-top {
-    min-height: $h-ptop;
+    min-height: 116px;
     padding-top: 4px;
     background: url('../../images/fallback/bg-fallback-repeat-x-header.jpg') top left repeat-x;
     @include bg-linear-grad(bottom, #ff3000, #ff9000);

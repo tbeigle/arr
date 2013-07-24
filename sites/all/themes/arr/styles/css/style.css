@@ -206,7 +206,7 @@ body {
     background: -webkit-linear-gradient(left, white 0%, white 2.5%, #e5e5e5 13.28125%, #e5e5e5 86.71875%, white 97.5%, white 100%);
     background: -moz-linear-gradient(left, white 0%, white 2.5%, #e5e5e5 13.28125%, #e5e5e5 86.71875%, white 97.5%, white 100%); }
   body #page-top {
-    min-height: 96px;
+    min-height: 116px;
     padding-top: 4px;
     background: url("../../images/fallback/bg-fallback-repeat-x-header.jpg") top left repeat-x;
     background: linear-gradient(bottom, #ff3000, #ff9000);
