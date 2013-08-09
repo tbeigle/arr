@@ -17,21 +17,28 @@
       &> ul {
         position: absolute;
         z-index: 100;
-        left: -8px;
+        left: 0;
         top: 56px;
-        display: none;
+        display: block;
+        visibility: hidden;
         width: auto;
         min-width: 154px;
         white-space: nowrap;
-        padding: 0 8px;
+        padding: 0;
+        background-color: $col-bg-nav-child-ul;
         
-        background: {
-          color: $col-bg-nav-child-ul;
+        li {
+          padding: {
+            right: 8px;
+            left: 8px;
+          }
         }
         
         ul {
-          position: relative;
-          margin: 4px 8px 0 16px;
+          position: absolute;
+          top: 0;
+          padding: 8px 0 0;
+          background-color: $col-bg-nav-child-ul;
         }
       }
     }
@@ -69,10 +76,6 @@
           }
           
           margin: 0;
-          
-          a.no-link {
-            cursor: pointer;
-          }
         }
       }
       

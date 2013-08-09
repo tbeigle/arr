@@ -66,17 +66,23 @@ http://webcodertools.com/imagetobase64converter
     #nav .content > ul > li > ul {
       position: absolute;
       z-index: 100;
-      left: -8px;
+      left: 0;
       top: 56px;
-      display: none;
+      display: block;
+      visibility: hidden;
       width: auto;
       min-width: 154px;
       white-space: nowrap;
-      padding: 0 8px;
+      padding: 0;
       background-color: #ff3000; }
+      #nav .content > ul > li > ul li {
+        padding-right: 8px;
+        padding-left: 8px; }
       #nav .content > ul > li > ul ul {
-        position: relative;
-        margin: 4px 8px 0 16px; }
+        position: absolute;
+        top: 0;
+        padding: 8px 0 0;
+        background-color: #ff3000; }
   #nav ul {
     padding: 0; }
     #nav ul li {
@@ -93,8 +99,6 @@ http://webcodertools.com/imagetobase64converter
         padding-top: 0;
         padding-bottom: 7px;
         margin: 0; }
-        #nav ul li ul li a.no-link {
-          cursor: pointer; }
       #nav ul li:hover ul, #nav ul li:active ul {
         display: block; }
     #nav ul li.expanded > a {
