@@ -21,9 +21,9 @@ regions[popups] = Popups
 ; JS
 scripts[] = js/main.js
 scripts[] = js/forms.js
+scripts[] = js/menu-multi-level.js
 
 ; Settings
-; Example from garland
 settings[arr_enable_home_ss] = 0
 
 ; CSS

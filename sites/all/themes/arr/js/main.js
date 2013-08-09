@@ -96,37 +96,6 @@
         return false;
       });
       
-      $('#page-top .primary-navigation .content > .menu > .expanded')
-      .mouseenter(function() {
-        var $ul = $(this).children('ul');
-        
-        $ul.fadeIn('fast');/*
-        if (!$ul.hasClass('animating')) {
-          $ul.addClass('animating').fadeIn('fast', function() {
-            $ul.removeClass('animating');
-          });
-        }*/
-      })
-      .mouseleave(function() {
-        var $ul = $(this).children('ul');
-        $ul.fadeOut('fast');
-        /*if (!$ul.hasClass('animating')) {
-          $ul.addClass('animating').fadeOut('fast', function() {
-            $ul.removeClass('animating');
-          });
-        }*/
-      });
-      
-      $('#page-top .primary-navigation .content > .menu > .expanded .expanded').each(function() {
-        var $this = $(this),
-            $nolink = $this.children('.no-link'),
-            $ul = $this.children('ul');
-        
-        $nolink.click(function() {
-          $ul.slideToggle('fast');
-        });
-      });
-      
       /**
        * Field collection slideshow
        */
