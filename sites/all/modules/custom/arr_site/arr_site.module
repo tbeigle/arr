@@ -31,6 +31,17 @@ function arr_site_init() {
   $vendor_type = variable_get('arr_site_vendor_node_type', '');
   $vid = variable_get('arr_site_vendor_vocabulary', 0);
   
+  // Dropdown menu JS settings
+  $settings = array(
+    'menuMultiLevel' => array(
+      'menus' => array(
+        '.primary-navigation .content > .menu',
+      ),
+    ),
+  );
+  
+  drupal_add_js($settings, 'setting');
+  
   $_arr_site = array(
     'mod_path' => $mod_path,
     'vendor_type' => $vendor_type,
