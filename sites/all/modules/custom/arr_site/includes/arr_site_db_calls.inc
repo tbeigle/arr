@@ -296,10 +296,7 @@ function arr_site_fetch_tech_specs_by_tid($tid) {
  * Fetch a node's tech specs data
  */
 function arr_site_fetch_tech_specs_for_node($node) {
-  $output = array(
-    'specs' => array(),
-    'groups' => array(),
-  );
+  $output = array();
   
   if (is_numeric($node)) {
     $nid = $node;
@@ -343,49 +340,51 @@ function arr_site_fetch_tech_specs_for_node($node) {
   
   $output['groups'] = array();
   
-  $sql =
-    'SELECT '.
-      's.`spec_id` AS `spec_id`, ' .
-      's.`spec` AS `spec`, '.
-      'c.`spec_cat_id` AS `spec_cat_id`, ' .
-      'c.`spec_category` AS `spec_category`, ' .
-      'ascm.`tid` AS `tid`, ' .
-      't.`name` AS `ven_cat` ' .
-    'FROM {arr_specs} s ' .
-      'LEFT JOIN {arr_spec_map} asm ' .
-        'ON s.`spec_id` = asm.`spec_id` ' .
-      'LEFT JOIN {arr_spec_cat_map} ascm ' .
-        'ON asm.`tcid` = ascm.`tcid` ' .
-      'LEFT JOIN {arr_spec_categories} c ' .
-        'ON ascm.`spec_cat_id` = c.`spec_cat_id` ' .
-      'LEFT JOIN {taxonomy_term_data} t ' .
-        'ON ascm.`tid` = t.`tid` ' .
-    'WHERE ascm.`tid` IN (' . implode(',', $tids) . ') ' .
-    'ORDER BY ' .
-      't.`weight`, ' .
-      't.`name`, ' .
-      'ascm.`weight`, ' .
-      'c.`spec_category`, ' .
-      'asm.`weight`, ' .
-      's.`spec`;';
-  $result = db_query($sql);
-  
-  foreach ($result as $row) {
-    if (!isset($output['groups'][$row->tid])) {
-      $output['groups'][$row->tid] = array(
-        'term' => $row->ven_cat,
-        'rows' => array(),
-      );
-    }
+  if (!empty($tids)) {
+    $sql =
+      'SELECT '.
+        's.`spec_id` AS `spec_id`, ' .
+        's.`spec` AS `spec`, '.
+        'c.`spec_cat_id` AS `spec_cat_id`, ' .
+        'c.`spec_category` AS `spec_category`, ' .
+        'ascm.`tid` AS `tid`, ' .
+        't.`name` AS `ven_cat` ' .
+      'FROM {arr_specs} s ' .
+        'LEFT JOIN {arr_spec_map} asm ' .
+          'ON s.`spec_id` = asm.`spec_id` ' .
+        'LEFT JOIN {arr_spec_cat_map} ascm ' .
+          'ON asm.`tcid` = ascm.`tcid` ' .
+        'LEFT JOIN {arr_spec_categories} c ' .
+          'ON ascm.`spec_cat_id` = c.`spec_cat_id` ' .
+        'LEFT JOIN {taxonomy_term_data} t ' .
+          'ON ascm.`tid` = t.`tid` ' .
+      'WHERE ascm.`tid` IN (' . implode(',', $tids) . ') ' .
+      'ORDER BY ' .
+        't.`weight`, ' .
+        't.`name`, ' .
+        'ascm.`weight`, ' .
+        'c.`spec_category`, ' .
+        'asm.`weight`, ' .
+        's.`spec`;';
+    $result = db_query($sql);
     
-    if (!isset($output['groups'][$row->tid]['rows'][$row->spec_cat_id])) {
-      $output['groups'][$row->tid]['rows'][$row->spec_cat_id] = array(
-        'cat' => $row->spec_category,
-        'rows' => array(),
-      );
+    foreach ($result as $row) {
+      if (!isset($output['groups'][$row->tid])) {
+        $output['groups'][$row->tid] = array(
+          'term' => $row->ven_cat,
+          'rows' => array(),
+        );
+      }
+      
+      if (!isset($output['groups'][$row->tid]['rows'][$row->spec_cat_id])) {
+        $output['groups'][$row->tid]['rows'][$row->spec_cat_id] = array(
+          'cat' => $row->spec_category,
+          'rows' => array(),
+        );
+      }
+      
+      $output['groups'][$row->tid]['rows'][$row->spec_cat_id]['rows'][$row->spec_id] = $row->spec;
     }
-    
-    $output['groups'][$row->tid]['rows'][$row->spec_cat_id]['rows'][$row->spec_id] = $row->spec;
   }
   
   return $output;
